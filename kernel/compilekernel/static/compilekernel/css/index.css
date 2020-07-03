@@ -1,0 +1,23 @@
+.navbar-nav a{
+
+    color: #249aff !important;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+
+}
+.navbar-nav a:hover{
+    color: black !important;
+}
+
+.h1_title{
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.btn-group button{
+    background-color:#249aff;
+    border: none;
+    width: 130px;
+    height: 40px;
+}

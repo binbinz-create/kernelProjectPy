@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>The Linux Kernel Archives</title>
+    <link href="{% static 'compilekernel/bootstrap-3.3.7-dist/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <script src="{% static 'compilekernel/js/jquery.js' %}" ></script>
+    <script src="{% static 'compilekernel/bootstrap-3.3.7-dist/js/bootstrap.min.js' %}" ></script>
+    <link href="{% static 'compilekernel/css/index.css' %}" rel="stylesheet" />
+</head>
+<body style="background-color: #F0EDE3;">
+    <input type="hidden" value="${APP_PATH}" id="APP_PATH"/>
+    <!--导航栏-->
+    <div  class="row">
+        <div class="col-md-8 col-md-offset-2" style="padding-left: 0px; padding-right: 0px;" >
+            <nav class=" navbar navbar-default" style="box-shadow: 0px 5px 10px #888888; background-color: #FFFFFF; padding-top: 20px; padding-bottom: 10px;">
+                <div class="container-fluid" >
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <h1 style=" text-shadow: 3px 3px 0 #F8F4EE; text-align: center; color: #2C1D00; font-family: oswald,helvetica,sans-serif !important;font-size: 3em;font-weight: bold;" >The Linux Kernel Archives</h1>
+                        <ul class="nav navbar-nav">
+                            <li><a href="${APP_PATH}/index.jsp">Compile <span class="sr-only"></span></a></li>
+                            <li><a href="#">Changelog</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!--操作界面-->
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-md-8 col-md-offset-2" style="padding-bottom: 500px; border-top-right-radius: 8px; border-top-left-radius: 8px; box-shadow: 0px -2px 15px #888888; background-color: #FFFFFF; ">
+            <!--选择CPU架构，分支，版本-->
+            <div style="margin-left: 25px; margin-top: 30px;" >
+                <h1 class="h1_title">请选择需要编译的内核</h1>
+                <!--选择CPU架构-->
+                <div id="cpus" class="btn-group"  style="margin-top: 17px;">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        选择CPU架构 <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">x86</a></li>
+                        <li><a href="#">arm</a></li>
+                        <li><a href="#">mips</a></li>
+                    </ul>
+                </div>
+                <!--选择版本-->
+                <div id="version" class="btn-group" style="margin-top: 17px; display: none; margin-left: 30px;">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        选择版本 <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <!--<li><a href="#">Action</a></li>-->
+                    </ul>
+                </div>
+                <!--选择分支-->
+                <div id="branch" class="btn-group" style="margin-top: 17px; display: none; margin-left: 30px;">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        选择分支 <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <%--<li><a href="#">Action</a></li>--%>
+                    </ul>
+                </div>
+            </div>
+
+            <!--选择文件-->
+            <div id="file_list" style="display: none; margin-left: 25px; margin-top: 30px;">
+                <h1 class="h1_title">请选择所需要的配置文件</h1>
+                   <%--<label class="checkbox-inline">
+                       <input type="checkbox"  value="1"> 1
+                   </label>--%>
+                <input class="btn btn-primary" id="file_select_btn" value="确定" style="margin-left: 810px; background-color:#249aff; border: none; width: 130px; height: 40px;"/>
+            </div>
+
+            <!--列出配置信息-->
+            <div id="setting_message" style="display: none; margin-left: 25px; margin-top: 30px;">
+                <h1 class="h1_title" style="display: inline-block;">所选择的配置信息如下</h1> <input class="btn btn-primary" value="开始编译" id="start_compile_btn" style="margin-left: 30px; background-color:#249aff; border: none; width: 130px; height: 40px;"/>
+                <table class="table " style="border-radius: 3px; background-color: #e2e2e2; width: 300px; margin-top: 10px;">
+                </table>
+            </div>
+
+            <!--日志信息-->
+            <div id="log_message" style="display: none; margin-top: 20px; margin-left: 18px;">
+                <h1 class="h1_title">日志信息如下所示</h1>
+                <textarea rows="10" cols="80" style="background-color: #efefef; border-radius: 5px;">
+
+                </textarea>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+$(document).ready(function(){
+
+    var APP_PATH = $("#APP_PATH").val();
+
+    /*点击cpu*/
+    $("#cpus a").click(function(){
+         var a_text = $(this).text();
+         $(this).parent().parent().prev().empty();
+         $(this).parent().parent().prev().append(a_text).append("<span class='caret'></span>");
+         $("#cpus button").attr("value",a_text);
+         //清空version下面的选项，并且重新加上
+         $("#version ul").empty();
+         $.getJSON("json/index.json",function(data){
+             $.each(data["version"][a_text],function (infoIndex,info) {
+                    var li_label = $("<li></li>").append("<a href='#'>"+info+"</a>");
+                    $("#version ul").append(li_label);
+             });
+         });
+         //重新更新版本和分支
+        $("#version button").empty().append("选择版本").append("<span class='caret'></span>");
+        $("#branch button").empty().append("选择分支").append("<span class='caret' ></span>");
+        //显示版本隐藏分支
+        $("#version").show(200);
+        $("#branch").hide(200);
+        $("#file_list").hide(200);
+        $("#setting_message").hide(200);
+        $("#log_message").hide(200);
+    });
+
+    /*选择版本*/
+    $("#version").on("click","a",function(){
+        var a_text=$(this).text();
+        $(this).parent().parent().prev().empty();
+        $(this).parent().parent().prev().append(a_text).append("<span class='caret'></span>");
+        $("#version button").attr("value",a_text);
+        //清空branch下面的选项，并且重新加上
+        $("#branch ul").empty();
+        $.getJSON("json/index.json",function(data){
+            $.each(data["branch"][a_text],function (infoIndex,info) {
+                var li_label = $("<li></li>").append("<a href='#'>"+info+"</a>");
+                $("#branch ul").append(li_label);
+            });
+        });
+
+        //重新选择分支
+        $("#branch button").empty().append("选择分支").append("<span class='caret' ></span>");
+        //显示分支
+        $("#branch").show(200);
+        $("#file_list").hide(200);
+        $("#setting_message").hide(200);
+        $("#log_message").hide(200);
+
+    });
+
+    /*选择分支*/
+    $("#branch").on("click","a",function(){
+       var a_text=$(this).text();
+        $(this).parent().parent().prev().empty();
+        $(this).parent().parent().prev().append(a_text).append("<span class='caret'></span>");
+        $("#branch button").attr("value",a_text);
+        $("#file_list").show(200);
+        $("#setting_message").hide(200);
+        $("#log_message").hide(200);
+
+        //发送ajax请求，列出配置文件的信息
+        var cpus = $("#cpus button").attr("value");
+        var branch = $("#branch button").attr("value");
+
+        $("#file_list").empty();
+        $("#file_list").append("<h1 class='h1_title'>请选择所需要的配置文件</h1>");
+        $.ajax({
+            url:APP_PATH+"/fileList",
+            data:{cpus:cpus,branch:branch},
+            type:"GET",
+            dataType:"json",
+            success:function(data){
+                $.each(data,function(infoIndex,info){
+                    var label_label = $("<label class='checkbox-inline'></label>").append("<input type='checkbox' value="+info+"/>").append(info);
+                    $("#file_list").append(label_label);
+                });
+                $("#file_list").append("<input class=\"btn btn-primary\" id=\"file_select_btn\" value=\"确定\" style=\"margin-left: 810px; background-color:#249aff; border: none; width: 130px; height: 40px;\"/>");
+            }
+        });
+
+
+    });
+
+    /*点击确定按钮，列出配置信息*/
+    $("#file_list").on("click","#file_select_btn",function(){
+
+        $("#setting_message table").empty();
+
+        var cpus=$("#cpus button").attr("value");
+        var version=$("#version button").attr("value");
+        var branch=$("#branch button").attr("value");
+
+        var cpus_label = $("<tr></tr>").append($("<td width='100px;'>CPU架构</td>")).append($("<td width='200px;'>"+cpus+"</td>"));
+        $("#setting_message table").append(cpus_label);
+        var version_label = $("<tr></tr>").append($("<td width='100px;'>版本</td>")).append($("<td width='200px;'>"+version+"</td>"));
+        $("#setting_message table").append(version_label);
+        var branch_label = $("<tr></tr>").append($("<td width='100px;'>分支</td>")).append($("<td width='200px;'>"+branch+"</td>"));
+        $("#setting_message table").append(branch_label);
+
+        var file="";
+        $.each($('input[type=checkbox]:checked'),function(){
+            file+=$(this).val()+"     ";
+        });
+        var file_label = $("<tr></tr>").append($("<td width='100px;'>配置文件</td>")).append($("<td width='200px;'>"+file+"</td>"));
+
+        $("#setting_message table").append(file_label);
+
+        $("#setting_message").show(200);
+        $("#log_message").hide(200);
+
+    });
+
+
+    //点击开始编译的按钮
+    $("#start_compile_btn").click(function(){
+
+        $("#log_message").show(200);
+        var cpus = $("#cpus button").attr("value");
+        var file ="";
+        $.each($('input[type=checkbox]:checked'),function(){
+           file+=$(this).val()+" ";
+        });
+        $.ajax({
+            url:APP_PATH+"/compile",
+            data:{cpus:cpus,file:file},
+            type: "GET",
+            dataType: "json",
+            success:function(data){
+
+            }
+        });
+
+    });
+
+});
+</script>
+</html>
