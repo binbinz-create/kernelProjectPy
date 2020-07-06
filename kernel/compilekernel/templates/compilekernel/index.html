@@ -10,7 +10,6 @@
     <link href="{% static 'compilekernel/css/index.css' %}" rel="stylesheet" />
 </head>
 <body style="background-color: #F0EDE3;">
-    <input type="hidden" value="${APP_PATH}" id="APP_PATH"/>
     <!--导航栏-->
     <div  class="row">
         <div class="col-md-8 col-md-offset-2" style="padding-left: 0px; padding-right: 0px;" >
@@ -19,7 +18,7 @@
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <h1 style=" text-shadow: 3px 3px 0 #F8F4EE; text-align: center; color: #2C1D00; font-family: oswald,helvetica,sans-serif !important;font-size: 3em;font-weight: bold;" >The Linux Kernel Archives</h1>
                         <ul class="nav navbar-nav">
-                            <li><a href="${APP_PATH}/index.jsp">Compile <span class="sr-only"></span></a></li>
+                            <li><a href="index.html">Compile <span class="sr-only"></span></a></li>
                             <li><a href="#">Changelog</a></li>
                         </ul>
                     </div>
@@ -93,7 +92,6 @@
 <script>
 $(document).ready(function(){
 
-    var APP_PATH = $("#APP_PATH").val();
 
     /*点击cpu*/
     $("#cpus a").click(function(){
@@ -103,7 +101,7 @@ $(document).ready(function(){
          $("#cpus button").attr("value",a_text);
          //清空version下面的选项，并且重新加上
          $("#version ul").empty();
-         $.getJSON("json/index.json",function(data){
+         $.getJSON("{% static 'compilekernel/json/index.json' %}",function(data){
              $.each(data["version"][a_text],function (infoIndex,info) {
                     var li_label = $("<li></li>").append("<a href='#'>"+info+"</a>");
                     $("#version ul").append(li_label);
@@ -128,7 +126,7 @@ $(document).ready(function(){
         $("#version button").attr("value",a_text);
         //清空branch下面的选项，并且重新加上
         $("#branch ul").empty();
-        $.getJSON("json/index.json",function(data){
+        $.getJSON("{% static 'compilekernel/json/index.json' %}",function(data){
             $.each(data["branch"][a_text],function (infoIndex,info) {
                 var li_label = $("<li></li>").append("<a href='#'>"+info+"</a>");
                 $("#branch ul").append(li_label);
@@ -161,21 +159,30 @@ $(document).ready(function(){
 
         $("#file_list").empty();
         $("#file_list").append("<h1 class='h1_title'>请选择所需要的配置文件</h1>");
+        $("#file_list").append("<table></table>");
         $.ajax({
-            url:APP_PATH+"/fileList",
+            url:"filelist",
             data:{cpus:cpus,branch:branch},
             type:"GET",
             dataType:"json",
             success:function(data){
-                $.each(data,function(infoIndex,info){
+                var tr_label=$("<tr></tr>")
+                var fileList = data.filelist
+                $.each(data.filelist,function(infoIndex,info){
+                    var td_label=$("<td width='20%'></td>")
                     var label_label = $("<label class='checkbox-inline'></label>").append("<input type='checkbox' value="+info+"/>").append(info);
-                    $("#file_list").append(label_label);
+                    td_label.append(label_label)
+                    if(infoIndex%5==0 && infoIndex!=0){
+                        $("#file_list table").append(tr_label)
+                        tr_label = $("<tr></tr>")
+                    }
+                    tr_label.append(td_label)
+                    //$("#file_list").append(label_label);
                 });
+                $("#file_list table").append(tr_label)
                 $("#file_list").append("<input class=\"btn btn-primary\" id=\"file_select_btn\" value=\"确定\" style=\"margin-left: 810px; background-color:#249aff; border: none; width: 130px; height: 40px;\"/>");
             }
         });
-
-
     });
 
     /*点击确定按钮，列出配置信息*/
@@ -218,12 +225,11 @@ $(document).ready(function(){
            file+=$(this).val()+" ";
         });
         $.ajax({
-            url:APP_PATH+"/compile",
+            url:"compile",
             data:{cpus:cpus,file:file},
             type: "GET",
             dataType: "json",
             success:function(data){
-
             }
         });
 
