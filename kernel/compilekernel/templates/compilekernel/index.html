@@ -18,7 +18,7 @@
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <h1 style=" text-shadow: 3px 3px 0 #F8F4EE; text-align: center; color: #2C1D00; font-family: oswald,helvetica,sans-serif !important;font-size: 3em;font-weight: bold;" >The Linux Kernel Archives</h1>
                         <ul class="nav navbar-nav">
-                            <li><a href="index.html">Compile <span class="sr-only"></span></a></li>
+                            <li><a href="index">Compile <span class="sr-only"></span></a></li>
                             <li><a href="#">Changelog</a></li>
                         </ul>
                     </div>
@@ -75,17 +75,18 @@
             <!--列出配置信息-->
             <div id="setting_message" style="display: none; margin-left: 25px; margin-top: 30px;">
                 <h1 class="h1_title" style="display: inline-block;">所选择的配置信息如下</h1> <input class="btn btn-primary" value="开始编译" id="start_compile_btn" style="margin-left: 30px; background-color:#249aff; border: none; width: 130px; height: 40px;"/>
+                <input class="btn btn-primary" value="停止编译" id="stop_compile_btn" style=" display:none;margin-left: 30px; background-color:#ff3434; border: none; width: 130px; height: 40px;"/>
                 <table class="table " style="border-radius: 3px; background-color: #e2e2e2; width: 300px; margin-top: 10px;">
                 </table>
             </div>
 
             <!--日志信息-->
-            <div id="log_message" style="display: none; margin-top: 20px; margin-left: 18px;">
+            <div id="log_message" style=" display: none; margin-top: 20px; margin-left: 18px;">
                 <h1 class="h1_title">日志信息如下所示</h1>
-                <textarea rows="10" cols="80" style="background-color: #efefef; border-radius: 5px;">
-
+                <textarea id="my" rows="15" cols="100" style="background-color: #efefef; border-radius: 5px;" >
                 </textarea>
             </div>
+
         </div>
     </div>
 </body>
@@ -224,16 +225,68 @@ $(document).ready(function(){
         $.each($('input[type=checkbox]:checked'),function(){
            file+=$(this).val()+" ";
         });
+        //除了停止编译按钮，其余的都禁用掉
+        disableBtn();
+        //初始行号
+        var nu = 0
+        //定时拉取日志
+        var timer = setInterval(function(){
+            var obj = document.getElementById("my");
+            obj.scrollTop = obj.scrollHeight
+            $.ajax({
+            url:"pulllog",
+            data:{"nu":nu},
+            type:"GET",
+            dataType:"json",
+            success:function(data){
+                $.each(data.log,function(infoIndex,info){
+                    $("#log_message textarea").append(info+"\n");
+                });
+                nu = data.nu;
+            }
+        });
+
+        },100)
+
+        //编译内核
         $.ajax({
             url:"compile",
             data:{cpus:cpus,file:file},
             type: "GET",
             dataType: "json",
             success:function(data){
+               clearInterval(timer);
             }
         });
-
     });
+
+
+
+    //将除停止编译外的按钮禁用,并且显示出停止编译的按钮
+    function disableBtn(){
+        $("#cpus button").attr("disabled","disabled");
+        $("#cpus button").addClass("disabled");
+
+        $("#version button").attr("disabled","disabled");
+        $("#version button").addClass("disabled");
+
+        $("#branch button").attr("disabled","disabled");
+        $("#branch button").addClass("disabled");
+
+        $("#file_select_btn").attr("disabled","disabled");
+        $("#file_select_btn").addClass("disabled");
+
+        $("#start_compile_btn").attr("disabled","disabled");
+        $("#start_compile_btn").addClass("disabled");
+
+        $(".navbar-nav a").attr("disabled","disabled");
+        $(".navbar-nav a").addClass("disabled");
+
+        $("#stop_compile_btn").show(200);
+    }
+
+
+
 
 });
 </script>

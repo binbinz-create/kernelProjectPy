@@ -5,5 +5,6 @@ import compilekernel.views
 urlpatterns=[
     path("index",compilekernel.views.to_index),
     path("filelist",compilekernel.views.file_list),
-    path("compile",compilekernel.views.start_compile)
+    path("compile",compilekernel.views.start_compile),
+    path("pulllog",compilekernel.views.pull_log)
 ]

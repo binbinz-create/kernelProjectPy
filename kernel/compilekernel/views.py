@@ -29,5 +29,14 @@ def start_compile(request):
     setting_files = ''
     for file in files.strip().split(' '):
         setting_files+="arch/"+cpus+"/configs/"+file+" "
-    command = "cd ~/klinux; ./scripts/buildpackage.sh "+setting_files
+    command = "cd ~/klinux; rm -rf build.log; ./scripts/buildpackage.sh "+setting_files + " >> build.log"
     exec(command)
+
+
+#用于js定时返回日志
+def pull_log(request):
+    nu = request.GET.get("nu")
+    l = exec("cd ~/klinux ; tail +"+nu+" build.log ; wc -l build.log")
+    nu = l[-1].split(' ')[0]
+    log = l[:-1]
+    return JsonResponse({"log":log,"nu":int(nu)+1})
