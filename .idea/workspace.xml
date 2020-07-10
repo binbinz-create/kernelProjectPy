@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="428621be-7b20-4039-b4bf-a5103229cbab" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/compilekernel/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/compilekernel/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/compilekernel/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/compilekernel/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/views.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1eQh2KUN1Uw2dXC34aDueDW2rSx" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunManager" selected="Python.tests">
+    <configuration name="tests" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="kernelProjectPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/kernel/compilekernel" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/kernel/compilekernel/tests.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="utils" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="kernelProjectPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/kernel/compilekernel" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/kernel/compilekernel/utils.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="views" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="kernelProjectPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/kernel/compilekernel" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/kernel/compilekernel/views.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.tests" />
+        <item itemvalue="Python.utils" />
+        <item itemvalue="Python.views" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="428621be-7b20-4039-b4bf-a5103229cbab" name="Default Changelist" comment="" />
+      <created>1594259515555</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1594259515555</updated>
+      <workItem from="1594259517287" duration="3435000" />
+      <workItem from="1594285240214" duration="620000" />
+      <workItem from="1594362600076" duration="7288000" />
+      <workItem from="1594377615638" duration="6407000" />
+      <workItem from="1594384209497" duration="774000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="259" y="81" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1594375892764">
+      <screen x="0" y="0" width="1600" height="854" />
+    </state>
+    <state x="259" y="81" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1600.854@0.0.1600.854" timestamp="1594375892764" />
+    <state x="584" y="181" key="FileChooserDialogImpl" timestamp="1594284616494">
+      <screen x="0" y="0" width="1600" height="854" />
+    </state>
+    <state x="584" y="181" key="FileChooserDialogImpl/0.0.1600.854@0.0.1600.854" timestamp="1594284616494" />
+    <state width="1600" height="358" key="GridCell.Tab.0.bottom" timestamp="1594384023951">
+      <screen x="0" y="0" width="1600" height="854" />
+    </state>
+    <state width="1600" height="358" key="GridCell.Tab.0.bottom/0.0.1600.854@0.0.1600.854" timestamp="1594384023951" />
+    <state width="1600" height="358" key="GridCell.Tab.0.center" timestamp="1594384023950">
+      <screen x="0" y="0" width="1600" height="854" />
+    </state>
+    <state width="1600" height="358" key="GridCell.Tab.0.center/0.0.1600.854@0.0.1600.854" timestamp="1594384023950" />
+    <state width="1600" height="358" key="GridCell.Tab.0.left" timestamp="1594384023950">
+      <screen x="0" y="0" width="1600" height="854" />
+    </state>
+    <state width="1600" height="358" key="GridCell.Tab.0.left/0.0.1600.854@0.0.1600.854" timestamp="1594384023950" />
+    <state width="1600" height="358" key="GridCell.Tab.0.right" timestamp="1594384023951">
+      <screen x="0" y="0" width="1600" height="854" />
+    </state>
+    <state width="1600" height="358" key="GridCell.Tab.0.right/0.0.1600.854@0.0.1600.854" timestamp="1594384023951" />
+    <state x="282" y="58" key="SettingsEditor" timestamp="1594259731110">
+      <screen x="0" y="0" width="1600" height="854" />
+    </state>
+    <state x="282" y="58" key="SettingsEditor/0.0.1600.854@0.0.1600.854" timestamp="1594259731110" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/kernelProjectPy$utils.coverage" NAME="utils Coverage Results" MODIFIED="1594381709274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
+    <SUITE FILE_PATH="coverage/kernelProjectPy$tests.coverage" NAME="tests Coverage Results" MODIFIED="1594385246616" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
+    <SUITE FILE_PATH="coverage/kernelProjectPy$views.coverage" NAME="views Coverage Results" MODIFIED="1594381096255" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
+  </component>
+</project>

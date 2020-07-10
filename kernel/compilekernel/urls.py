@@ -6,5 +6,7 @@ urlpatterns=[
     path("index",compilekernel.views.to_index),
     path("filelist",compilekernel.views.file_list),
     path("compile",compilekernel.views.start_compile),
-    path("pulllog",compilekernel.views.pull_log)
+    path("pulllog",compilekernel.views.pull_log),
+    path("download_log",compilekernel.views.download_log)
+
 ]

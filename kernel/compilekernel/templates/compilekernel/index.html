@@ -81,10 +81,17 @@
             </div>
 
             <!--日志信息-->
-            <div id="log_message" style=" display: none; margin-top: 20px; margin-left: 18px;">
+            <div id="log_message" style=" display: none; margin-top: 20px; margin-left: 25px;">
                 <h1 class="h1_title">日志信息如下所示</h1>
                 <textarea id="my" rows="15" cols="100" style="background-color: #efefef; border-radius: 5px;" >
                 </textarea>
+            </div>
+
+            <div id="download_file" style="margin-top: 20px; margin-left: 25px;">
+                <h1 class="h1_title">下载链接</h1>
+                <!--下载-->
+                <a href="download_log" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px;">download kernel</a>
+                <a href="download_log" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px; margin-left: 20px;">download build.log</a>
             </div>
 
         </div>
@@ -232,7 +239,6 @@ $(document).ready(function(){
         //定时拉取日志
         var timer = setInterval(function(){
             var obj = document.getElementById("my");
-            obj.scrollTop = obj.scrollHeight
             $.ajax({
             url:"pulllog",
             data:{"nu":nu},
@@ -240,6 +246,7 @@ $(document).ready(function(){
             dataType:"json",
             success:function(data){
                 $.each(data.log,function(infoIndex,info){
+                    obj.scrollTop = obj.scrollHeight
                     $("#log_message textarea").append(info+"\n");
                 });
                 nu = data.nu;

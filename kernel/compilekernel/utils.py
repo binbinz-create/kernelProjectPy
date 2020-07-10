@@ -26,4 +26,3 @@ def git_without_passwd():
     os.system("echo "+Config.CREDENTIALS_1+" > ~/.git-credentials")
     os.system("echo "+Config.CREDENTIALS_2+" >> ~/.git-credentials")
     os.system("git config --global credential.helper store")
-

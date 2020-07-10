@@ -40,3 +40,10 @@ def pull_log(request):
     nu = l[-1].split(' ')[0]
     log = l[:-1]
     return JsonResponse({"log":log,"nu":int(nu)+1})
+
+def download_log(request):
+    file=open(exec("cd ~ ; pwd")[0]+"/klinux/build.log","rb")
+    response =  HttpResponse(file)
+    response["Content-Type"] = 'application/octet-stream'
+    response["Content-Disposition"] = 'attachment;filename="build.log"'
+    return response
