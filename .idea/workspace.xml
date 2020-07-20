@@ -2,16 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="428621be-7b20-4039-b4bf-a5103229cbab" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/kernelProjectPy.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kernelProjectPy.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/compilekernel/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/test.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel/compilekernel/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/tests.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel/compilekernel/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kernel/compilekernel/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel/compilekernel/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -25,11 +31,12 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="js.buildTools.grunt.grunt-cli.package" value="" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/kernel" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
-  <component name="RunManager" selected="Python.tests">
+  <component name="RunManager" selected="Django Server.kernel">
     <configuration name="tests" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="kernelProjectPy" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -96,11 +103,46 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="kernel" type="Python.DjangoServer" factoryName="Django server">
+      <module name="kernelProjectPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="kernel.settings" />
+      </envs>
+      <option name="SDK_HOME" value="/usr/bin/python3.8" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="127.0.0.1" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="js.build_tools.grunt">
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Django Server.kernel" />
+      <item itemvalue="Python.tests" />
+      <item itemvalue="Python.utils" />
+      <item itemvalue="Python.views" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.tests" />
-        <item itemvalue="Python.utils" />
         <item itemvalue="Python.views" />
+        <item itemvalue="Python.utils" />
       </list>
     </recent_temporary>
   </component>
@@ -118,7 +160,13 @@
       <workItem from="1594285240214" duration="620000" />
       <workItem from="1594362600076" duration="7288000" />
       <workItem from="1594377615638" duration="6407000" />
-      <workItem from="1594384209497" duration="774000" />
+      <workItem from="1594384209497" duration="1759000" />
+      <workItem from="1594600089992" duration="6634000" />
+      <workItem from="1594608400345" duration="19730000" />
+      <workItem from="1594894608894" duration="7237000" />
+      <workItem from="1595204635352" duration="31418000" />
+      <workItem from="1595247003201" duration="480000" />
+      <workItem from="1595247493439" duration="1285000" />
     </task>
     <servers />
   </component>
@@ -126,38 +174,69 @@
     <option name="version" value="2" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="259" y="81" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1594375892764">
+    <state x="214" y="98" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1595222365084">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state x="259" y="81" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1600.854@0.0.1600.854" timestamp="1594375892764" />
-    <state x="584" y="181" key="FileChooserDialogImpl" timestamp="1594284616494">
+    <state x="214" y="98" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1600.854@0.0.1600.854" timestamp="1595222365084" />
+    <state x="594" y="138" key="EnvironmentVariablesDialog" timestamp="1595222322262">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state x="584" y="181" key="FileChooserDialogImpl/0.0.1600.854@0.0.1600.854" timestamp="1594284616494" />
-    <state width="1600" height="358" key="GridCell.Tab.0.bottom" timestamp="1594384023951">
+    <state x="594" y="138" key="EnvironmentVariablesDialog/0.0.1600.854@0.0.1600.854" timestamp="1595222322262" />
+    <state x="584" y="181" key="FileChooserDialogImpl" timestamp="1595228869878">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state width="1600" height="358" key="GridCell.Tab.0.bottom/0.0.1600.854@0.0.1600.854" timestamp="1594384023951" />
-    <state width="1600" height="358" key="GridCell.Tab.0.center" timestamp="1594384023950">
+    <state x="584" y="181" key="FileChooserDialogImpl/0.0.1600.854@0.0.1600.854" timestamp="1595228869878" />
+    <state width="1600" height="263" key="GridCell.Tab.0.bottom" timestamp="1595248032651">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state width="1600" height="358" key="GridCell.Tab.0.center/0.0.1600.854@0.0.1600.854" timestamp="1594384023950" />
-    <state width="1600" height="358" key="GridCell.Tab.0.left" timestamp="1594384023950">
+    <state width="1600" height="263" key="GridCell.Tab.0.bottom/0.0.1600.854@0.0.1600.854" timestamp="1595248032651" />
+    <state width="1600" height="263" key="GridCell.Tab.0.center" timestamp="1595248032649">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state width="1600" height="358" key="GridCell.Tab.0.left/0.0.1600.854@0.0.1600.854" timestamp="1594384023950" />
-    <state width="1600" height="358" key="GridCell.Tab.0.right" timestamp="1594384023951">
+    <state width="1600" height="263" key="GridCell.Tab.0.center/0.0.1600.854@0.0.1600.854" timestamp="1595248032649" />
+    <state width="1600" height="263" key="GridCell.Tab.0.left" timestamp="1595248032648">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state width="1600" height="358" key="GridCell.Tab.0.right/0.0.1600.854@0.0.1600.854" timestamp="1594384023951" />
-    <state x="282" y="58" key="SettingsEditor" timestamp="1594259731110">
+    <state width="1600" height="263" key="GridCell.Tab.0.left/0.0.1600.854@0.0.1600.854" timestamp="1595248032648" />
+    <state width="1600" height="263" key="GridCell.Tab.0.right" timestamp="1595248032650">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state x="282" y="58" key="SettingsEditor/0.0.1600.854@0.0.1600.854" timestamp="1594259731110" />
+    <state width="1600" height="263" key="GridCell.Tab.0.right/0.0.1600.854@0.0.1600.854" timestamp="1595248032650" />
+    <state width="1600" height="263" key="GridCell.Tab.1.bottom" timestamp="1595248045527">
+      <screen x="0" y="0" width="1600" height="854" />
+    </state>
+    <state width="1600" height="263" key="GridCell.Tab.1.bottom/0.0.1600.854@0.0.1600.854" timestamp="1595248045527" />
+    <state width="1600" height="263" key="GridCell.Tab.1.center" timestamp="1595248045526">
+      <screen x="0" y="0" width="1600" height="854" />
+    </state>
+    <state width="1600" height="263" key="GridCell.Tab.1.center/0.0.1600.854@0.0.1600.854" timestamp="1595248045526" />
+    <state width="1600" height="263" key="GridCell.Tab.1.left" timestamp="1595248045525">
+      <screen x="0" y="0" width="1600" height="854" />
+    </state>
+    <state width="1600" height="263" key="GridCell.Tab.1.left/0.0.1600.854@0.0.1600.854" timestamp="1595248045525" />
+    <state width="1600" height="263" key="GridCell.Tab.1.right" timestamp="1595248045527">
+      <screen x="0" y="0" width="1600" height="854" />
+    </state>
+    <state width="1600" height="263" key="GridCell.Tab.1.right/0.0.1600.854@0.0.1600.854" timestamp="1595248045527" />
+    <state x="282" y="58" width="1037" height="742" key="SettingsEditor" timestamp="1595247481174">
+      <screen x="0" y="0" width="1600" height="854" />
+    </state>
+    <state x="282" y="58" width="1037" height="742" key="SettingsEditor/0.0.1600.854@0.0.1600.854" timestamp="1595247481174" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/kernel/compilekernel/views.py</url>
+          <line>43</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/kernelProjectPy$utils.coverage" NAME="utils Coverage Results" MODIFIED="1594381709274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
-    <SUITE FILE_PATH="coverage/kernelProjectPy$tests.coverage" NAME="tests Coverage Results" MODIFIED="1594385246616" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
-    <SUITE FILE_PATH="coverage/kernelProjectPy$views.coverage" NAME="views Coverage Results" MODIFIED="1594381096255" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
+    <SUITE FILE_PATH="coverage/kernelProjectPy$tests.coverage" NAME="tests Coverage Results" MODIFIED="1595237845957" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
+    <SUITE FILE_PATH="coverage/kernelProjectPy$views.coverage" NAME="views Coverage Results" MODIFIED="1595222105061" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
   </component>
 </project>

@@ -1,25 +1,38 @@
 <html>
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>The Linux Kernel Archives</title>
+    <link href="{% static 'compilekernel/bootstrap-3.3.7-dist/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <script src="{% static 'compilekernel/js/jquery.js' %}" ></script>
+    <script src="{% static 'compilekernel/bootstrap-3.3.7-dist/js/bootstrap.min.js' %}" ></script>
+</head>
 <body>
+<div id="log_message">
+    <textarea id="my" rows="15" cols="100">
 
-<textarea rows="10" cols="20" id="my">
-</textarea>
-
-<button onClick="test()">test</button>
-
+    </textarea>
+</div>
+</body>
 <script>
 
-setInterval(function add_value(){
-    document.getElementById("my").append("123123"+'\n')
-},500)
+    var nu = 0;
+     var timer = setInterval(function(){
+            var obj = document.getElementById("my");
+            $.ajax({
+            url:"pulllog",
+            data:{"nu":nu},
+            type:"GET",
+            dataType:"json",
+            success:function(data){
+                $.each(data.log,function(infoIndex,info){
+                    obj.scrollTop = obj.scrollHeight
+                    $("#log_message textarea").append(info+"\n");
+                });
+                nu = data.nu;
+            }
+        });
 
-
-var i = 1;
-function test()
-{
-	var obj = document.getElementById("my");
-	obj.scrollTop = obj.scrollHeight; // good
-}
+        },500)
 </script>
-
-</body>
 </html>
