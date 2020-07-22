@@ -87,7 +87,7 @@
                 </textarea>
             </div>
 
-            <div id="download_file" style="margin-top: 20px; margin-left: 25px;">
+            <div id="download_file" style="display: none; margin-top: 20px; margin-left: 25px;">
                 <h1 class="h1_title">下载链接</h1>
                 <!--下载-->
                 <a href="download_kernel" id="down_kernel" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px;">download kernel</a>
@@ -239,6 +239,23 @@ $(document).ready(function(){
         var nu = 0
         var obj = document.getElementById("my");
 
+      /* //实时拉取日志
+        setInterval(function pulllog() {
+            $.ajax({
+                url: "pulllog",
+                data: {"nu": nu},
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data.log, function (infoIndex, info) {
+                        obj.scrollTop = obj.scrollHeight
+                        $("#log_message textarea").append(info + "\n");
+                    });
+                    nu = data.nu;
+                }
+            });
+        },500)*/
+
         //编译内核
         $.ajax({
             url:"compile",
@@ -246,43 +263,17 @@ $(document).ready(function(){
             type: "GET",
             dataType: "json",
             success:function(data){
+              $("#down_kernel").text(data.file_name);
+              $("#down_kernel").attr("href","download_kernel?file_path="+data.file_path);
+              $("#download_file").show(200)
             }
         });
 
-        //实时拉取日志
-       /* while(true){
-            $.ajax({
-            url:"pulllog",
-            data:{"nu":nu},
-            type:"GET",
-            dataType:"json",
-            success:function(data){
-                $.each(data.log,function(infoIndex,info){
-                    obj.scrollTop = obj.scrollHeight
-                    $("#log_message textarea").append(info+"\n");
-                });
-                nu = data.nu;
-            }
-        });
-        }*/
 
-        //将下载链接编程内核包的名字，要放在编译成功后的操作中
-        getKernelName();
+
 
     });
 
-    function getKernelName(){
-
-        var kernel_label = $("#down_kernel")
-        $.ajax({
-            url:"get_name",
-            type:"GET",
-            dataType:"json",
-            success:function(data){
-                kernel_label.text(data.name)
-            }
-        })
-    }
 
 
 

@@ -3,6 +3,7 @@ import os
 import subprocess
 #from kernel.compilekernel.utils import exec
 # Create your tests here
+from kernel.compilekernel.models import AfterCompile
 
 
 def exec(command):
@@ -11,19 +12,20 @@ def exec(command):
     for i in range(0,len(re)):
         result.append(re[i].strip('\n'))
     return result
+'''
+results = exec("cd ~/klinux ; ./tar_kernel.sh")
+print(results[-6]) #下载链接
+print(results[-5]) #主线版本
+print(results[-4]) #应用结构
+print(results[-3]) #个性版本
+print(results[-2]) #分支版本
+print(results[-1]) #时间
 
+print(results[-6].split('/')[-1]) #package name
 
 '''
-SUFFIX=`cat debian/build/build-generic/.config | grep LOCALVERSION= | awk -F'"' '{print $2}' | awk -F'.' '{print $3}'`
-VERSION=`cat Makefile  | grep VERSION | head -n 1 | awk -F' = ' '{print $2}'`
-PATCHLEVEL=`cat Makefile  | grep PATCHLEVEL | head -n 1 | awk -F' = ' '{print $2}'`
-SUBLEVEL=`cat Makefile  | grep SUBLEVEL | head -n 1 | awk -F' = ' '{print $2}'`
-EXTRAVERSION=`cat Makefile | grep "EXTRAVERSION =" | head -n 1 | awk -F'-'  '{print $2}'`
 
-GIT_VERSION=`git log --oneline  | head -n 1  | awk -F' ' '{print $1}'`
-KERNEL_VERSION=${VERSION}.${PATCHLEVEL}.${SUBLEVEL}-${EXTRAVERSION}-g${GIT_VERSION}
-
-'''
-
-command = "asdfasdf"
-print(command[:-1])
+os.system("cd ~/klinux ; rm -rf tar_kernel.sh")
+for command in AfterCompile.commands:
+    os.system("echo \"" + command + "\" >> ~/klinux/tar_kernel.sh")
+results = exec("cd ~/klinux ; chmod 777 ~/klinux/tar_kernel.sh ;  ./tar_kernel.sh")
