@@ -9,6 +9,7 @@
 </head>
 <body>
 <div id="log_message">
+    <button></button>
     <textarea id="my" rows="15" cols="100">
 
     </textarea>
@@ -16,23 +17,5 @@
 </body>
 <script>
 
-    var nu = 0;
-     var timer = setInterval(function(){
-            var obj = document.getElementById("my");
-            $.ajax({
-            url:"pulllog",
-            data:{"nu":nu},
-            type:"GET",
-            dataType:"json",
-            success:function(data){
-                $.each(data.log,function(infoIndex,info){
-                    obj.scrollTop = obj.scrollHeight
-                    $("#log_message textarea").append(info+"\n");
-                });
-                nu = data.nu;
-            }
-        });
-
-        },500)
 </script>
 </html>

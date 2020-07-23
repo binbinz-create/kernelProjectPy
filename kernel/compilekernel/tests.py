@@ -25,7 +25,8 @@ print(results[-6].split('/')[-1]) #package name
 
 '''
 
-os.system("cd ~/klinux ; rm -rf tar_kernel.sh")
-for command in AfterCompile.commands:
-    os.system("echo \"" + command + "\" >> ~/klinux/tar_kernel.sh")
-results = exec("cd ~/klinux ; chmod 777 ~/klinux/tar_kernel.sh ;  ./tar_kernel.sh")
+list_pid =  exec("ps aux | grep build | awk '{print $2}'")
+command = "echo zhubin123 | sudo -S kill -9 "
+for pid in list_pid:
+    command+=pid+" "
+exec(command)

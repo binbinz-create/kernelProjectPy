@@ -56,13 +56,27 @@ def start_compile(request):
                          "kernel_version":kernel_version,"architecture":architecture,
                          "suffix":suffix,"branch_version":branch_version,"date":date})
 
+#停止编译内核
+def stop_compile(request):
+    list_pid = exec("ps aux | grep build | awk '{print $2}'")
+    command = "echo zhubin123 | sudo -S kill -9 "
+    for pid in list_pid:
+        command += pid + " "
+    exec(command)
+    return None
+
 #用于js定时返回日志
 def pull_log(request):
-    nu = request.GET.get("nu")
-    l = exec("cd ~/klinux ; tail -n +"+nu+" build.log ; wc -l build.log")
-    nu = l[-1].split(' ')[0]
-    log = l[:-1]
-    return JsonResponse({"log":log,"nu":int(nu)+1})
+    nu = int(request.GET.get("nu"))
+    build_log_nu = str(exec("wc -l ~/klinux/build.log")[0]).split(' ')[0]
+    #编译进程的数量
+    build_process_number = exec("ps aux | grep buildpackage | awk '{print $2}' | wc -l")
+    #如果当前build.log的行足够的话,则返回十行日志
+    if((nu+20)<int(build_log_nu)):
+        log = exec("sed -n '"+str(nu)+","+str((nu+20))+"p' ~/klinux/build.log")
+        return JsonResponse({"log":log,"nu":(nu+20),"build_process_number":build_process_number,"build_log_nu":build_log_nu})
+    else:
+        return JsonResponse({"build_process_number":build_process_number,"nu":nu,"build_log_nu":build_log_nu})
 
 #用于下载日志
 def download_log(request):
