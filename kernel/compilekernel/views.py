@@ -35,9 +35,13 @@ def start_compile(request):
     setting_files = ''
     for file in files.strip().split(' '):
         setting_files+="arch/"+cpus+"/configs/"+file+" "
-    command = "cd ~/klinux; echo "+Config.ROOT_PASSWD+" | rm -rf build.log ;echo "+Config.ROOT_PASSWD+" | sudo -S  ./scripts/buildpackage.sh "+setting_files[:-2]+ " >> build.log  "
+    command = "cd ~/klinux; echo "+Config.ROOT_PASSWD+" | rm -rf build.log ;echo "+Config.ROOT_PASSWD+" | sudo -S  ./scripts/buildpackage.sh "+setting_files[:-2]+ " >> build.log"
     #编译内核
     os.system(command)
+    #判断是否编译成功（有可能编译时，点击了停止编译）
+    deb_num = exec("ls -l ~/*deb | wc -l")[0]
+    if(int(deb_num) < 5):
+       return JsonResponse({"success":0})
     #编译完成之后打包操作
     os.system("cd ~/klinux ; rm -rf tar_kernel.sh")
     for command in AfterCompile.commands:
@@ -54,7 +58,7 @@ def start_compile(request):
     #The above data will then be stored in the database
     return JsonResponse({"file_path":file_path,"file_name":file_name,
                          "kernel_version":kernel_version,"architecture":architecture,
-                         "suffix":suffix,"branch_version":branch_version,"date":date})
+                         "suffix":suffix,"branch_version":branch_version,"date":date,"success":1})
 
 #停止编译内核
 def stop_compile(request):
@@ -63,7 +67,7 @@ def stop_compile(request):
     for pid in list_pid:
         command += pid + " "
     exec(command)
-    return None
+    return JsonResponse({"stop":1})
 
 #用于js定时返回日志
 def pull_log(request):

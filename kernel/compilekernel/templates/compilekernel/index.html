@@ -84,6 +84,7 @@
             <div id="log_message" style=" display: none; margin-top: 20px; margin-left: 25px;">
                 <h1 class="h1_title">日志信息如下所示</h1>
                 <textarea id="my" rows="15" cols="100" placeholder="一大波日志即将到来" style="background-color: #efefef; border-radius: 5px;" >
+                    一大波日志即将到来.......
                 </textarea>
             </div>
 
@@ -256,7 +257,6 @@ $(document).ready(function(){
                     });
                     nu = data.nu;
                   //如果只有一个进程，表示编译结束。（这一个进程为 grep）  后一个条件是防止编译进程还没启动就终止日志打印了
-                  console.log("=================="+data.build_process_number+"===="+data.build_log_nu+"========================")
                   if(data.build_process_number < 4 && data.build_log_nu > 100){
                     isCompile=false
                    }
@@ -274,9 +274,11 @@ $(document).ready(function(){
             type: "GET",
             dataType: "json",
             success:function(data){
-              $("#down_kernel").text(data.file_name);
-              $("#down_kernel").attr("href","download_kernel?file_path="+data.file_path);
-              $("#download_file").show(200)
+                if(data.success==1){
+                   $("#down_kernel").text(data.file_name);
+                   $("#down_kernel").attr("href","download_kernel?file_path="+data.file_path);
+                   $("#download_file").show(200)
+                }
             }
         });
     });
@@ -320,22 +322,22 @@ $(document).ready(function(){
 
     //将除停止编译以外的按钮都恢复，并且隐藏掉停止编译的按钮
     function enableBtn(){
-        $("#cpus button").attr("disabled","");
+        $("#cpus button").removeAttr("disabled");
         $("#cpus button").removeClass("disabled");
 
-        $("#version button").attr("disabled","");
+        $("#version button").removeAttr("disabled");
         $("#version button").removeClass("disabled");
 
-        $("#branch button").attr("disabled","");
+        $("#branch button").removeAttr("disabled");
         $("#branch button").removeClass("disabled");
 
-        $("#file_select_btn").attr("disabled","");
+        $("#file_select_btn").removeAttr("disabled");
         $("#file_select_btn").removeClass("disabled");
 
-        $("#start_compile_btn").attr("disabled","");
+        $("#start_compile_btn").removeAttr("disabled");
         $("#start_compile_btn").removeClass("disabled");
 
-        $(".navbar-nav a").attr("disabled","");
+        $(".navbar-nav a").removeAttr("disabled");
         $(".navbar-nav a").removeClass("disabled");
 
         $("#stop_compile_btn").hide(200);
