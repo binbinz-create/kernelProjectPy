@@ -35,7 +35,5 @@ exec(command)
 exec("cd ~/klinux; echo "+Config.ROOT_PASSWD+" | rm -rf build.log ;echo "+Config.ROOT_PASSWD+" | sudo -S  ./scripts/buildpackage.sh  arch/x86/configs/kylin_common.config  >> build.log")
 status =  exec("echo $?")
 print(status)
-'''
 
-deb_num = exec("ls -l ~/*deb | wc -l")[0]
-print(deb_num)
+'''

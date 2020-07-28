@@ -21,3 +21,8 @@
     width: 130px;
     height: 40px;
 }
+
+.btn-group a:hover{
+    color: black !important;
+    text-decoration: none !important;
+}

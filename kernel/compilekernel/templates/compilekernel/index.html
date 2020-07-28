@@ -15,15 +15,31 @@
         <div class="col-md-8 col-md-offset-2" style="padding-left: 0px; padding-right: 0px;" >
             <nav class=" navbar navbar-default" style="box-shadow: 0px 5px 10px #888888; background-color: #FFFFFF; padding-top: 20px; padding-bottom: 10px;">
                 <div class="container-fluid" >
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <div  class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <h1 style=" text-shadow: 3px 3px 0 #F8F4EE; text-align: center; color: #2C1D00; font-family: oswald,helvetica,sans-serif !important;font-size: 3em;font-weight: bold;" >The Linux Kernel Compile</h1>
-                        <ul class="nav navbar-nav">
+                        <ul class="nav navbar-nav" style="float: none !important;">
                             <li><a href="index">Compile <span class="sr-only"></span></a></li>
                             <li><a href="#">Changelog</a></li>
+                            <li style="float: right !important;">
+                                <div class="btn-group " style="margin-top: 15px;">
+                                  <a type="button" style="background-color: #ffffff;" class="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                   {{ request.session.user }} <span class="caret"></span>
+                                  </a>
+                                  <ul class="dropdown-menu">
+                                    <li><a href="#">编译记录</a></li>
+                                    <li><a href="#">已经编译过的包</a></li>
+                                    <li><a href="exit_login">退出登录</a></li>
+                                  </ul>
+                               </div>
+                            </li>
+                            <li id="compiling_user" style="display: none;margin-right: 50px;  float: right;"><a href="#" style=" ">{{ request.session.user }}正在编译</a></li>
                         </ul>
                     </div>
                 </div>
             </nav>
+
+
+
         </div>
     </div>
     <!--操作界面-->
@@ -69,7 +85,7 @@
                    <%--<label class="checkbox-inline">
                        <input type="checkbox"  value="1"> 1
                    </label>--%>
-                <input class="btn btn-primary" id="file_select_btn" value="确定" style="margin-left: 810px; background-color:#249aff; border: none; width: 130px; height: 40px;"/>
+                <input class="btn btn-primary" id="file_select_btn" value="确定" style=" margin-left: 810px; background-color:#249aff; border: none; width: 130px; height: 40px;"/>
             </div>
 
             <!--列出配置信息-->
@@ -91,7 +107,7 @@
             <div id="download_file" style="display: none; margin-top: 20px; margin-left: 25px;">
                 <h1 class="h1_title">下载链接</h1>
                 <!--下载-->
-                <a href="download_kernel" id="down_kernel" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px;">download kernel</a>
+                <a href="download_kernel"  id="down_kernel" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px;">download kernel</a>
                 <a href="download_log" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px; margin-left: 20px;">download build.log</a>
             </div>
 
@@ -236,6 +252,8 @@ $(document).ready(function(){
         });
         //除了停止编译按钮，其余的都禁用掉
         disableBtn();
+        //显示当前用户正在编译
+        $("#compiling_user").show(200)
         //初始行号
         var nu = 0
         var obj = document.getElementById("my");
@@ -262,11 +280,12 @@ $(document).ready(function(){
                    }
                 }
             });
-            setTimeout(pulllog,500)
+            setTimeout(pulllog,1000)
         }
 
         pulllog()
 
+        $("#download_file").hide(200)
         //编译内核
         $.ajax({
             url:"compile",
@@ -309,6 +328,8 @@ $(document).ready(function(){
 
     //点击停止编译的按钮
     $("#stop_compile_btn").click(function(){
+        $("#compiling_user").hide(200)
+        $("#log_message textarea").text("");
         $.ajax({
            url:"stop_compile",
            type:"GET",
@@ -317,7 +338,6 @@ $(document).ready(function(){
            }
         });
         enableBtn()
-        $("#download_file").hide()
     });
 
     //将除停止编译以外的按钮都恢复，并且隐藏掉停止编译的按钮
@@ -341,7 +361,31 @@ $(document).ready(function(){
         $(".navbar-nav a").removeClass("disabled");
 
         $("#stop_compile_btn").hide(200);
+        //显示日志打印
+        $("#download_file").show(200)
+        $("#down_kernel").hide()
     }
+
+
+
 });
+
+//刷新页面后，会去获取当前正在编译的用户
+window.onload=function(){
+    $.ajax({
+        url:"is_user_compile",
+        type:"GET",
+        dataType:"json",
+        success:function(data){
+            alert(data.compiling_user)
+            if(data.compiling_user!=null) {
+                $("#compiling_user").show(200)
+                $("#compiling_user a").text("")
+                $("#compiling_user a").text(data.compiling_user+"正在编译")
+            }
+        }
+    });
+}
+
 </script>
 </html>

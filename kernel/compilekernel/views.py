@@ -7,9 +7,17 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 # Create your views here.
 
+
 #直接跳转到index.html页面
+from compilekernel.Dao import Dao
+
+compiling_user=None
+
 def to_index(request):
     return render(request, "compilekernel/index.html", None)
+
+def to_login(request):
+    return render(request,"compilekernel/login.html",None)
 
 #直接跳转到test.html页面
 def to_test(request):
@@ -27,8 +35,10 @@ def file_list(request):
     fileList = exec("ls ~/klinux/arch/"+cpus+"/configs")
     return JsonResponse({"filelist":fileList})
 
+
 #点击开始编译按钮进行编译
 def start_compile(request):
+    global compiling_user
     cpus = request.GET.get("cpus")
     files = str(request.GET.get("file"))
     #获取配置文件
@@ -36,10 +46,16 @@ def start_compile(request):
     for file in files.strip().split(' '):
         setting_files+="arch/"+cpus+"/configs/"+file+" "
     command = "cd ~/klinux; echo "+Config.ROOT_PASSWD+" | rm -rf build.log ;echo "+Config.ROOT_PASSWD+" | sudo -S  ./scripts/buildpackage.sh "+setting_files[:-2]+ " >> build.log"
-    #编译内核
+    #设置正在编译的用户
+    username = request.session.get("user",default=None)
+    compiling_user=username
+    #进行编译
     os.system(command)
+    #编译结束后,将正在编译的用户设置为None
+    compiling_user=None
     #判断是否编译成功（有可能编译时，点击了停止编译）
-    deb_num = exec("ls -l ~/*deb | wc -l")[0]
+    deb_num = exec("ls ~ | grep -E .*deb | wc -l")
+    #~没有*deb文件，则表明没有编译成功
     if(int(deb_num) < 5):
        return JsonResponse({"success":0})
     #编译完成之后打包操作
@@ -62,8 +78,10 @@ def start_compile(request):
 
 #停止编译内核
 def stop_compile(request):
+    global compiling_user
     list_pid = exec("ps aux | grep build | awk '{print $2}'")
     command = "echo zhubin123 | sudo -S kill -9 "
+    compiling_user=None
     for pid in list_pid:
         command += pid + " "
     exec(command)
@@ -79,6 +97,7 @@ def pull_log(request):
     if((nu+20)<int(build_log_nu)):
         log = exec("sed -n '"+str(nu)+","+str((nu+20))+"p' ~/klinux/build.log")
         return JsonResponse({"log":log,"nu":(nu+20),"build_process_number":build_process_number,"build_log_nu":build_log_nu})
+    #如果不够的话，则返回进程数，查看是否编译过程已经结束
     else:
         return JsonResponse({"build_process_number":build_process_number,"nu":nu,"build_log_nu":build_log_nu})
 
@@ -103,3 +122,30 @@ def download_kernel(request):
     response["Content-Type"] = 'application/octet-stream'
     response["Content-Disposition"] = 'attachment;filename='+str(file_path).split('/')[-1]+''
     return response
+
+
+#用于判断登录
+def login_judge(request):
+    dao = Dao()
+    username = request.GET.get("username")
+    password = request.GET.get("password")
+    sql = "select pass_word from tbl_user where user_name = '%s' " % (username)
+    results = dao.executeQuerySql(sql);
+    if(len(results) == 0):
+        return JsonResponse({"success":0})
+    password_indb =  results[0][0];
+    if(password_indb == password):
+        request.session["user"] = username;
+        return JsonResponse({"success":1})
+    else:
+        return JsonResponse({"success":0})
+
+#退出登录
+def exit_login(request):
+    request.session["user"] = None;
+    return render(request,"compilekernel/login.html",None)
+
+#用于返回是否有人在编译内核
+def is_user_compile(request):
+    global compiling_user
+    return JsonResponse({"compiling_user":compiling_user})

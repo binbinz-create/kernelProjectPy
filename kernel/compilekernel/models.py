@@ -25,7 +25,7 @@ class AfterCompile:
               "echo " +Config.ROOT_PASSWD+ " | sudo -S ntpdate -u ntp1.aliyun.com",
               "DATE=\$(date '+%Y-%m-%d_%H_%M')",
               "tar -zcvf \"release-\${KERNEL_VERSION}-\${SUFFIX}-package.tar.gz\" ../*deb",
-#              "rm -rf ../*deb",
+              "rm -rf ../*deb",
               "echo "+Config.ROOT_PASSWD+" | sudo -S mkdir -p /var/data/ftpdata/robot/\${DATE}/",
               "echo "+Config.ROOT_PASSWD+" | sudo -S mv release-\${KERNEL_VERSION}-\${SUFFIX}-package.tar.gz /var/data/ftpdata/robot/\${DATE}/",
               #outputs the path of the compiled and packaged kernel package, kernel_version, architecture,suffix, branch_version for recoding
