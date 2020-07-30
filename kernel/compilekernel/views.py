@@ -2,16 +2,23 @@ import os
 from django.shortcuts import render
 from compilekernel.utils import git_without_passwd
 from compilekernel.utils import exec
+from compilekernel.utils import client_to_server
 from compilekernel.models import Config,AfterCompile
 from django.http import HttpResponse
 from django.http import JsonResponse
 # Create your views here.
-
-
 #直接跳转到index.html页面
 from compilekernel.Dao import Dao
 
-compiling_user=None
+
+#使用全局变量记录各台机器正在编译的用户,cps架构，分支，版本，配置文件等等
+x86_compiling_user=None
+arm_compiling_user=None
+mips_compiling_user=None
+cpus=None
+branch=None
+version=None
+file=None
 
 def to_index(request):
     return render(request, "compilekernel/index.html", None)
@@ -19,26 +26,28 @@ def to_index(request):
 def to_login(request):
     return render(request,"compilekernel/login.html",None)
 
+def to_compile(request):
+    return render(request,"compilekernel/compiling.html",None)
+
 #直接跳转到test.html页面
 def to_test(request):
     return render(request,"compilekernel/test.html",None)
 
-#列出配置文件的请求
+#选择完分之后列出配置文件的请求
 def file_list(request):
     cpus = request.GET.get("cpus")
     branch = request.GET.get("branch")
     #免用户名和密码即可操作git
-    git_without_passwd()
+    git_without_passwd("172.16.31.225")
     #切换分支，更新资源
-    exec("cd ~/klinux && echo "+Config.ROOT_PASSWD+" | sudo -S git checkout "+branch+" && git pull origin "+branch)
+    client_to_server("172.16.31.225","cd ~/klinux && echo "+Config.ROOT_PASSWD+" | sudo -S git checkout "+branch+" && git pull origin "+branch)
     #获取文件名
-    fileList = exec("ls ~/klinux/arch/"+cpus+"/configs")
+    fileList = client_to_server("172.16.31.225","ls ~/klinux/arch/"+cpus+"/configs")
     return JsonResponse({"filelist":fileList})
-
 
 #点击开始编译按钮进行编译
 def start_compile(request):
-    global compiling_user
+    global compiling_user,branch,version,file,cpus
     cpus = request.GET.get("cpus")
     files = str(request.GET.get("file"))
     #获取配置文件
@@ -46,9 +55,12 @@ def start_compile(request):
     for file in files.strip().split(' '):
         setting_files+="arch/"+cpus+"/configs/"+file+" "
     command = "cd ~/klinux; echo "+Config.ROOT_PASSWD+" | rm -rf build.log ;echo "+Config.ROOT_PASSWD+" | sudo -S  ./scripts/buildpackage.sh "+setting_files[:-2]+ " >> build.log"
-    #设置正在编译的用户
+    #设置正在编译的用户,以及编译的相关信息
     username = request.session.get("user",default=None)
     compiling_user=username
+    file = files
+    branch = request.GET.get("branch")
+    version = request.GET.get("version")
     #进行编译
     os.system(command)
     #编译结束后,将正在编译的用户设置为None
@@ -59,11 +71,11 @@ def start_compile(request):
     if(int(deb_num) < 5):
        return JsonResponse({"success":0})
     #编译完成之后打包操作
-    os.system("cd ~/klinux ; rm -rf tar_kernel.sh")
+    os.system("cd ~/klinux ; rm -rf scripts/tar_kernel.sh")
     for command in AfterCompile.commands:
-        os.system("echo \""+command+"\" >> ~/klinux/tar_kernel.sh")
+        os.system("echo \""+command+"\" >> ~/klinux/scripts/tar_kernel.sh")
     #run tar_kernel.sh and return such as file path , branch version , architecture, suffix , date
-    results =  exec("cd ~/klinux ; chmod 777 ~/klinux/tar_kernel.sh ;  ./tar_kernel.sh")
+    results =  exec("cd ~/klinux/scripts ; chmod 777 ~/klinux/scripts/tar_kernel.sh ;  ./tar_kernel.sh")
     file_path = results[-6]
     file_name = results[-6].split('/')[-1]
     kernel_version = results[-5]  #主线版本
@@ -123,7 +135,6 @@ def download_kernel(request):
     response["Content-Disposition"] = 'attachment;filename='+str(file_path).split('/')[-1]+''
     return response
 
-
 #用于判断登录
 def login_judge(request):
     dao = Dao()
@@ -136,6 +147,7 @@ def login_judge(request):
     password_indb =  results[0][0];
     if(password_indb == password):
         request.session["user"] = username;
+        request.session.set_expiry(0)
         return JsonResponse({"success":1})
     else:
         return JsonResponse({"success":0})
@@ -145,7 +157,7 @@ def exit_login(request):
     request.session["user"] = None;
     return render(request,"compilekernel/login.html",None)
 
-#用于返回是否有人在编译内核
+#返回正在编译的用户，以及正在编译的版本，分支，配置文件等信息
 def is_user_compile(request):
     global compiling_user
-    return JsonResponse({"compiling_user":compiling_user})
+    return JsonResponse({"compiling_user":compiling_user,"cpus":cpus,"branch":branch,"file":file,"version":version})

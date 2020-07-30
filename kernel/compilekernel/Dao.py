@@ -17,7 +17,6 @@ class Dao:
             conn.close()
             cur.close()
 
-
     #查询方法
     def executeQuerySql(self,sql):
         conn = pymysql.connect("localhost","root","123456","klinux")

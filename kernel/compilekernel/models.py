@@ -5,10 +5,18 @@ from django.db import models
 #一些配置信息
 class Config:
     ROOT_PASSWD="zhubin123"
+    X86_ROOT_PASSWD="jd#180188"
+    ARM_ROOT_PASSWD="jd#180188"
+    MIPS_ROOT_PASSWD="123123"
+    GIT_ADDRESS="http://172.19.140.200/jiangdi/klinux.git"
     GIT_USER_NAME="jiangdi"
     GIT_PASSWD="jd#180188"
     CREDENTIALS_1="http://"+GIT_USER_NAME+":jd%23180188@172.19.140.200"
-    CREDENTIALS_2="https://"+GIT_USER_NAME+":"+GIT_PASSWD+"@172.19.140.200/kernel-management-team/klinux.git"
+    CREDENTIALS_2="https://"+GIT_USER_NAME+":"+GIT_PASSWD+"@172.19.140.200/jiangdi/klinux.git"
+    ARM_IP="172.19.140.198"
+    X86_IP="172.19.140.166"
+    MIPS_IP="172.19.140.199"
+
 
 #编译完成之后的打包操作,shell ,参照release...
 class AfterCompile:

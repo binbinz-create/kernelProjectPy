@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>The Linux Kernel Compile</title>
+    <link href="{% static 'compilekernel/bootstrap-3.3.7-dist/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <script src="{% static 'compilekernel/js/jquery.js' %}" ></script>
+    <script src="{% static 'compilekernel/bootstrap-3.3.7-dist/js/bootstrap.min.js' %}" ></script>
+    <link href="{% static 'compilekernel/css/index.css' %}" rel="stylesheet" />
+</head>
+<body style="background-color: #F0EDE3;">
+    <!--导航栏-->
+    <div  class="row">
+        <div class="col-md-8 col-md-offset-2" style="padding-left: 0px; padding-right: 0px;" >
+            <nav class=" navbar navbar-default" style="box-shadow: 0px 5px 10px #888888; background-color: #FFFFFF; padding-top: 20px; padding-bottom: 10px;">
+                <div class="container-fluid" >
+                    <div  class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <h1 style=" text-shadow: 3px 3px 0 #F8F4EE; text-align: center; color: #2C1D00; font-family: oswald,helvetica,sans-serif !important;font-size: 3em;font-weight: bold;" >The Linux Kernel Compile</h1>
+                        <ul class="nav navbar-nav" style="float: none !important;">
+                            <li><a href="index">Compile <span class="sr-only"></span></a></li>
+                            <li><a href="#">Changelog</a></li>
+                            <li style="float: right !important;">
+                                <div class="btn-group " style="margin-top: 15px;">
+                                  <a type="button" style="background-color: #ffffff;" class="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                   {{ request.session.user }} <span class="caret"></span>
+                                  </a>
+                                  <ul class="dropdown-menu">
+                                    <li><a href="#">编译记录</a></li>
+                                    <li><a href="#">已经编译过的包</a></li>
+                                    <li><a href="exit_login">退出登录</a></li>
+                                  </ul>
+                               </div>
+                            </li>
+                            <li id="compiling_user" style="display: none;margin-right: 50px;  float: right;"><a href="#" style=" ">{{ request.session.user }}正在编译</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!--操作界面-->
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-md-8 col-md-offset-2" style="padding-bottom: 500px; border-top-right-radius: 8px; border-top-left-radius: 8px; box-shadow: 0px -2px 15px #888888; background-color: #FFFFFF; ">
+
+            <!--列出配置信息-->
+            <div id="setting_message" style=" margin-left: 25px; margin-top: 30px;">
+                <h1 class="h1_title" style="display: inline-block;">所选择的配置信息如下</h1>
+                <input class="btn btn-primary" value="停止编译" id="stop_compile_btn" style="margin-left: 30px; background-color:#ff3434; border: none; width: 130px; height: 40px;"/>
+                <table class="table " style="border-radius: 3px; background-color: #e2e2e2; width: 300px; margin-top: 10px;">
+                </table>
+            </div>
+
+            <!--日志信息-->
+            <div id="log_message" style=" margin-top: 20px; margin-left: 25px;">
+                <h1 class="h1_title">日志信息如下所示</h1>
+                <textarea id="my" rows="15" cols="100" placeholder="一大波日志即将到来" style="background-color: #efefef; border-radius: 5px;" >
+                </textarea>
+            </div>
+
+            <div id="download_file" style="display: none; margin-top: 20px; margin-left: 25px;">
+                <h1 class="h1_title">下载链接</h1>
+                <!--下载-->
+                <a href="download_kernel"  id="down_kernel" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px;">download kernel</a>
+                <a href="download_log" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px; margin-left: 20px;">download build.log</a>
+            </div>
+
+        </div>
+    </div>
+</body>
+<script>
+$(document).ready(function(){
+
+    //点击开始编译的按钮
+    //$("#start_compile_btn").click(function(){
+        //初始行号
+        var nu = 0
+        var obj = document.getElementById("my");
+        //是否还在编译
+        var isCompile = true
+        //实时拉取日志
+        function pulllog() {
+            if(!isCompile)
+                return;
+            $.ajax({
+                url: "pulllog",
+                data: {"nu":nu},
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data.log, function (infoIndex, info){
+                        obj.scrollTop = obj.scrollHeight
+                        $("#log_message textarea").append(info + "\n");
+                    });
+                    nu = data.nu;
+                  //如果只有一个进程，表示编译结束。（这一个进程为 grep）  后一个条件是防止编译进程还没启动就终止日志打印了
+                  if(data.build_process_number < 4 && data.build_log_nu > 100){
+                    isCompile=false
+                   }
+                }
+            });
+            setTimeout(pulllog,1000)
+        }
+        pulllog()
+        $("#download_file").hide(200)
+
+    //});
+
+    //点击停止编译的按钮
+    $("#stop_compile_btn").click(function(){
+        $("#compiling_user").hide(200)
+        $("#log_message textarea").text("");
+        $.ajax({
+           url:"stop_compile",
+           type:"GET",
+           dataType:"json",
+           success:function(data){
+           }
+        });
+        enableBtn()
+    });
+
+    //将除停止编译以外的按钮都恢复，并且隐藏掉停止编译的按钮
+    function enableBtn(){
+        $("#cpus button").removeAttr("disabled");
+        $("#cpus button").removeClass("disabled");
+
+        $("#version button").removeAttr("disabled");
+        $("#version button").removeClass("disabled");
+
+        $("#branch button").removeAttr("disabled");
+        $("#branch button").removeClass("disabled");
+
+        $("#file_select_btn").removeAttr("disabled");
+        $("#file_select_btn").removeClass("disabled");
+
+        $("#start_compile_btn").removeAttr("disabled");
+        $("#start_compile_btn").removeClass("disabled");
+
+        $(".navbar-nav a").removeAttr("disabled");
+        $(".navbar-nav a").removeClass("disabled");
+
+        $("#stop_compile_btn").hide(200);
+        //显示日志打印
+        $("#download_file").show(200)
+        $("#down_kernel").hide()
+    }
+
+});
+
+//刷新页面后，会去获取当前正在编译的用户,并且将相关信息记录在a标签中
+window.onload=function(){
+    $.ajax({
+        url:"is_user_compile",
+        type:"GET",
+        dataType:"json",
+        success:function(data){
+            if(data.compiling_user!=null) {
+                $("#compiling_user").show(200)
+                $("#compiling_user a").text("")
+                $("#compiling_user a").text(data.compiling_user+"正在编译")
+                $("#compiling_user a").attr("href","compile_page")
+            }
+            //将编译的相关信息列出来
+            $("#setting_message table").empty();
+            var cpus_label = $("<tr></tr>").append($("<td width='100px;'>CPU架构</td>")).append($("<td width='200px;'>"+data.cpus+"</td>"));
+            $("#setting_message table").append(cpus_label);
+            var version_label = $("<tr></tr>").append($("<td width='100px;'>版本</td>")).append($("<td width='200px;'>"+data.version+"</td>"));
+            $("#setting_message table").append(version_label);
+            var branch_label = $("<tr></tr>").append($("<td width='100px;'>分支</td>")).append($("<td width='200px;'>"+data.branch+"</td>"));
+            $("#setting_message table").append(branch_label);
+            var file_label = $("<tr></tr>").append($("<td width='100px;'>文件</td>")).append($("<td width='200px;'>"+data.file+"</td>"));
+            $("#setting_message table").append(file_label);
+        }
+    });
+}
+
+</script>
+</html>

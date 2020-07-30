@@ -27,7 +27,7 @@
                                   </a>
                                   <ul class="dropdown-menu">
                                     <li><a href="#">编译记录</a></li>
-                                    <li><a href="#">已经编译过的包</a></li>
+                                    <li><a href="#">编译完成的包</a></li>
                                     <li><a href="exit_login">退出登录</a></li>
                                   </ul>
                                </div>
@@ -245,7 +245,6 @@ $(document).ready(function(){
     $("#start_compile_btn").click(function(){
 
         $("#log_message").show(200);
-        var cpus = $("#cpus button").attr("value");
         var file ="";
         $.each($('input[type=checkbox]:checked'),function(){
            file+=$(this).val()+" ";
@@ -254,12 +253,22 @@ $(document).ready(function(){
         disableBtn();
         //显示当前用户正在编译
         $("#compiling_user").show(200)
+        //编译的相关信息都放在用户正在编译的链接里面
+        var cpus=$("#cpus button").attr("value");
+        var version=$("#version button").attr("value");
+        var branch=$("#branch button").attr("value");
+        var file="";
+        $.each($('input[type=checkbox]:checked'),function(){
+            file+=$(this).val()+"     ";
+        });
+        href = "compile_page?branch="+branch+"&version="+version+"&file="+file+"&cpus="+cpus
+        $("#compiling_user a").attr("href",href)
         //初始行号
         var nu = 0
         var obj = document.getElementById("my");
         //是否还在编译
         var isCompile = true
-       //实时拉取日志
+        //实时拉取日志
         function pulllog() {
             if(!isCompile)
                 return;
@@ -289,7 +298,7 @@ $(document).ready(function(){
         //编译内核
         $.ajax({
             url:"compile",
-            data:{cpus:cpus,file:file},
+            data:{cpus:cpus,file:file,branch:branch,version:version},
             type: "GET",
             dataType: "json",
             success:function(data){
@@ -377,11 +386,12 @@ window.onload=function(){
         type:"GET",
         dataType:"json",
         success:function(data){
-            alert(data.compiling_user)
             if(data.compiling_user!=null) {
                 $("#compiling_user").show(200)
                 $("#compiling_user a").text("")
                 $("#compiling_user a").text(data.compiling_user+"正在编译")
+                href = "compile_page?branch="+data.branch+"&version="+data.version+"&file="+data.file+"&cpus="+data.cpus
+                $("#compiling_user a").attr("href",href)
             }
         }
     });

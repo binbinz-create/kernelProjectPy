@@ -1,6 +1,8 @@
 import os
 import subprocess
 from compilekernel.models import Config
+from socket import *
+import json
 
 #执行命令，并返回打印结果
 def exec(command):
@@ -22,7 +24,19 @@ def sh(command, print_msg=True):
     return lines
 
 #免用户名和密码登录git
-def git_without_passwd():
-    os.system("echo "+Config.CREDENTIALS_1+" > ~/.git-credentials")
-    os.system("echo "+Config.CREDENTIALS_2+" >> ~/.git-credentials")
-    os.system("git config --global credential.helper store")
+def git_without_passwd(serverName):
+    client_to_server(serverName,"echo "+Config.CREDENTIALS_1+" > ~/.git-credentials")
+    client_to_server(serverName,"echo "+Config.CREDENTIALS_2+" >> ~/.git-credentials")
+    client_to_server(serverName,"git config --global credential.helper store")
+
+#向serverName发送命令command
+def client_to_server(serverName,command):
+    serverPort=12000
+    clientSocket=socket(AF_INET,SOCK_DGRAM)
+    #发送命令
+    clientSocket.sendto(command.encode(),(serverName,serverPort))
+    receive_results,serverAddress=clientSocket.recvfrom(16384)
+    #将接收到的json字符串转换为list
+    results = json.loads(receive_results.decode('utf-8'))
+    clientSocket.close()
+    return results
