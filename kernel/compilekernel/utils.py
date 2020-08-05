@@ -40,3 +40,29 @@ def client_to_server(serverName,command):
     results = json.loads(receive_results.decode('utf-8'))
     clientSocket.close()
     return results
+
+#专门用来发送编译命令的client
+def client_to_server_compile(serverName,command):
+    serverPort=12001
+    clientSocket=socket(AF_INET,SOCK_DGRAM)
+    #发送命令
+    clientSocket.sendto(command.encode(),(serverName,serverPort))
+    receive_results,serverAddress=clientSocket.recvfrom(16384)
+    #将接收到的json字符串转换为list
+    results = json.loads(receive_results.decode('utf-8'))
+    clientSocket.close()
+    return results
+
+#client dedicated to sending pull log commands
+def client_to_server_log(serverName,command):
+    serverPort=12002
+    clientSocket=socket(AF_INET,SOCK_DGRAM)
+    #send command
+    clientSocket.sendto(command.encode(),(serverName,serverPort))
+    receive_results,serverAddress=clientSocket.recvfrom(16384)
+    #convert the received json string to a list
+    results = json.loads(receive_results.decode('utf-8'))
+    clientSocket.close()
+    return results
+
+

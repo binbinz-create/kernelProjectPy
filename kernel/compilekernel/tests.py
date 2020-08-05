@@ -43,21 +43,33 @@ print(results[-2]) #分支版本
 print(results[-1]) #时间
 print(results[-6].split('/')[-1]) #package name
 '''
-
 '''
 #杀死进程
-list_pid =  exec("ps aux | grep build | awk '{print $2}'")
+list_pid =  client_to_server(Config.X86_IP,"ps aux | grep build | awk '{print $2}'")
 command = "echo zhubin123 | sudo -S kill -9 "
 for pid in list_pid:
     command+=pid+" "
-exec(command)
+client_to_server(Config.X86_IP,command)
 '''
-
 '''
 exec("cd ~/klinux; echo "+Config.ROOT_PASSWD+" | rm -rf build.log ;echo "+Config.ROOT_PASSWD+" | sudo -S  ./scripts/buildpackage.sh  arch/x86/configs/kylin_common.config  >> build.log")
 status =  exec("echo $?")
 print(status)
 '''
+'''
+command = "cd /tmp/klinux; echo jd#180188 | sudo -S rm -rf build.log ; echo jd#180188 | sudo -S touch build log ; echo jd#180188 | sudo -S chmod 666 build.log ; echo jd#180188 | sudo -S  ./scripts/buildpackage.sh arch/x86/configs/kylin_common.config >> build.log"
+results = client_to_server(Config.X86_IP,command)
+for log in results:
+    print(log)
+'''
+'''
+logs=client_to_server(Config.X86_IP,"ls ~")
+for log in logs:
+    print(log)
+'''
 
-git_without_passwd(Config.MIPS_IP)
-results =  client_to_server(Config.MIPS_IP,"echo 123123 | sudo -S git clone " + Config.GIT_ADDRESS+ " /tmp/klinux")
+logs = client_to_server(Config.X86_IP,"ls /")
+for log in logs:
+    print(log)
+
+

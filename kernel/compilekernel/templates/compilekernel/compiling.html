@@ -10,6 +10,8 @@
     <link href="{% static 'compilekernel/css/index.css' %}" rel="stylesheet" />
 </head>
 <body style="background-color: #F0EDE3;">
+    <!-- Be used to record which cpus information are displayed on the current page -->
+    <input type="hidden" id="cpus" value="{{ request.cpus }}" />
     <!--导航栏-->
     <div  class="row">
         <div class="col-md-8 col-md-offset-2" style="padding-left: 0px; padding-right: 0px;" >
@@ -32,7 +34,21 @@
                                   </ul>
                                </div>
                             </li>
-                            <li id="compiling_user" style="display: none;margin-right: 50px;  float: right;"><a href="#" style=" ">{{ request.session.user }}正在编译</a></li>
+                           <li style="float: right !important; margin-right: 20px;">
+                                <div class="btn-group " style="margin-top: 15px;">
+                                  <a type="button" style="background-color: #ffffff;" class="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                   正在编译的用户 <span class="caret"></span>
+                                  </a>
+                                  <ul class="dropdown-menu">
+                                    <li><a href="#" id="x86_compiling" style=" ">xxx:正在编译x86</a></li>
+                                    <li><a href="#" id="arm_compiling" style=" ">xxx:正在编译arm</a></li>
+                                    <li><a href="#" id="mips_compiling" style=" ">xxx:正在编译mips</a></li>
+                                  </ul>
+                               </div>
+                            </li>
+                         <!--   <li style="float: right !important; margin-right: 20px;">
+                                <a href="#"  style="display: none;" id="compiling_state">状态：正在编译</a>
+                            </li> -->
                         </ul>
                     </div>
                 </div>
@@ -73,6 +89,7 @@ $(document).ready(function(){
 
     //点击开始编译的按钮
     //$("#start_compile_btn").click(function(){
+        var cpus = $("#cpus").val()
         //初始行号
         var nu = 0
         var obj = document.getElementById("my");
@@ -84,7 +101,7 @@ $(document).ready(function(){
                 return;
             $.ajax({
                 url: "pulllog",
-                data: {"nu":nu},
+                data: {"nu":nu,"cpus":cpus},
                 type: "GET",
                 dataType: "json",
                 success: function (data) {
@@ -150,6 +167,33 @@ $(document).ready(function(){
 
 //刷新页面后，会去获取当前正在编译的用户,并且将相关信息记录在a标签中
 window.onload=function(){
+    var cpus = $("#cpus").val()
+    //显示正在编译的信息
+    $.ajax({
+
+      url:"compile_message",
+      type:"GET",
+      data:{"cpus":cpus},
+      dataType:"json",
+      success:function(data){
+          if(data.compiling_message!=null){
+            //将编译的相关信息列出来
+            $("#setting_message table").empty();
+            var cpus_label = $("<tr></tr>").append($("<td width='100px;'>CPU架构</td>")).append($("<td width='200px;'>"+data.compiling_message.cpus+"</td>"));
+            $("#setting_message table").append(cpus_label);
+            var version_label = $("<tr></tr>").append($("<td width='100px;'>版本</td>")).append($("<td width='200px;'>"+data.compiling_message.version+"</td>"));
+            $("#setting_message table").append(version_label);
+            var branch_label = $("<tr></tr>").append($("<td width='100px;'>分支</td>")).append($("<td width='200px;'>"+data.compiling_message.branch+"</td>"));
+            $("#setting_message table").append(branch_label);
+            var file_label = $("<tr></tr>").append($("<td width='100px;'>文件</td>")).append($("<td width='200px;'>"+data.compiling_message.file+"</td>"));
+            $("#setting_message table").append(file_label);
+          }
+      }
+
+    });
+
+
+    //显示三台机器是否有人正在编译
     $.ajax({
         url:"is_user_compile",
         type:"GET",
@@ -161,16 +205,7 @@ window.onload=function(){
                 $("#compiling_user a").text(data.compiling_user+"正在编译")
                 $("#compiling_user a").attr("href","compile_page")
             }
-            //将编译的相关信息列出来
-            $("#setting_message table").empty();
-            var cpus_label = $("<tr></tr>").append($("<td width='100px;'>CPU架构</td>")).append($("<td width='200px;'>"+data.cpus+"</td>"));
-            $("#setting_message table").append(cpus_label);
-            var version_label = $("<tr></tr>").append($("<td width='100px;'>版本</td>")).append($("<td width='200px;'>"+data.version+"</td>"));
-            $("#setting_message table").append(version_label);
-            var branch_label = $("<tr></tr>").append($("<td width='100px;'>分支</td>")).append($("<td width='200px;'>"+data.branch+"</td>"));
-            $("#setting_message table").append(branch_label);
-            var file_label = $("<tr></tr>").append($("<td width='100px;'>文件</td>")).append($("<td width='200px;'>"+data.file+"</td>"));
-            $("#setting_message table").append(file_label);
+
         }
     });
 }

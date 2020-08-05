@@ -32,14 +32,25 @@
                                   </ul>
                                </div>
                             </li>
-                            <li id="compiling_user" style="display: none;margin-right: 50px;  float: right;"><a href="#" style=" ">{{ request.session.user }}正在编译</a></li>
+                            <li style="float: right !important; margin-right: 20px;">
+                                <div class="btn-group " style="margin-top: 15px;">
+                                  <a type="button" style="background-color: #ffffff;" class="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                   正在编译的用户 <span class="caret"></span>
+                                  </a>
+                                  <ul class="dropdown-menu">
+                                    <li><a href="#" id="x86_compiling" style=" ">xxx:正在编译x86</a></li>
+                                    <li><a href="#" id="arm_compiling" style=" ">xxx:正在编译arm</a></li>
+                                    <li><a href="#" id="mips_compiling" style=" ">xxx:正在编译mips</a></li>
+                                  </ul>
+                               </div>
+                            </li>
+                            <li style="float: right !important; margin-right: 20px;">
+                                <a href="#"  style="display: none;" id="compiling_state">状态：正在编译</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
             </nav>
-
-
-
         </div>
     </div>
     <!--操作界面-->
@@ -241,9 +252,12 @@ $(document).ready(function(){
     });
 
 
+    //是否还在编译
+    var isCompile = true
     //点击开始编译的按钮
     $("#start_compile_btn").click(function(){
-
+        //clear log information
+        $("#log_message textarea").text("");
         $("#log_message").show(200);
         var file ="";
         $.each($('input[type=checkbox]:checked'),function(){
@@ -251,30 +265,32 @@ $(document).ready(function(){
         });
         //除了停止编译按钮，其余的都禁用掉
         disableBtn();
-        //显示当前用户正在编译
-        $("#compiling_user").show(200)
+        //显示当前用户的状态为正在编译
+        $("#compiling_state").show(200)
         //编译的相关信息都放在用户正在编译的链接里面
         var cpus=$("#cpus button").attr("value");
-        var version=$("#version button").attr("value");
-        var branch=$("#branch button").attr("value");
-        var file="";
-        $.each($('input[type=checkbox]:checked'),function(){
-            file+=$(this).val()+"     ";
-        });
-        href = "compile_page?branch="+branch+"&version="+version+"&file="+file+"&cpus="+cpus
-        $("#compiling_user a").attr("href",href)
+//        var version=$("#version button").attr("value");
+//        var branch=$("#branch button").attr("value");
+//        var file="";
+//        $.each($('input[type=checkbox]:checked'),function(){
+//            file+=$(this).val()+"     ";
+//        });
+//        href = "compile_page?branch="+branch+"&version="+version+"&file="+file+"&cpus="+cpus
+//        $("#compiling_state").attr("href",href)
+        $("#compiling_state").show(100)
+        $("#compiling_state").attr("href","compile_page&cpus="+cpus)
+        /*=============================================拉取日志=============================================== */
         //初始行号
         var nu = 0
+        isCompile=true
         var obj = document.getElementById("my");
-        //是否还在编译
-        var isCompile = true
         //实时拉取日志
         function pulllog() {
             if(!isCompile)
                 return;
             $.ajax({
                 url: "pulllog",
-                data: {"nu":nu},
+                data: {"nu":nu,"cpus":cpus},
                 type: "GET",
                 dataType: "json",
                 success: function (data) {
@@ -283,10 +299,10 @@ $(document).ready(function(){
                         $("#log_message textarea").append(info + "\n");
                     });
                     nu = data.nu;
-                  //如果只有一个进程，表示编译结束。（这一个进程为 grep）  后一个条件是防止编译进程还没启动就终止日志打印了
-                  if(data.build_process_number < 4 && data.build_log_nu > 100){
-                    isCompile=false
-                   }
+               //如果只有一个进程，表示编译结束。（这一个进程为 grep）  后一个条件是防止编译进程还没启动就终止日志打印了
+               //   if(data.build_process_number < 4 && data.build_log_nu > 100){
+               //     isCompile=false
+               //    }
                 }
             });
             setTimeout(pulllog,1000)
@@ -296,6 +312,13 @@ $(document).ready(function(){
 
         $("#download_file").hide(200)
         //编译内核
+        var cpus=$("#cpus button").attr("value");
+        var version=$("#version button").attr("value");
+        var branch=$("#branch button").attr("value");
+        var file="";
+        $.each($('input[type=checkbox]:checked'),function(){
+            file+=$(this).val()+"     ";
+        });
         $.ajax({
             url:"compile",
             data:{cpus:cpus,file:file,branch:branch,version:version},
@@ -338,10 +361,12 @@ $(document).ready(function(){
     //点击停止编译的按钮
     $("#stop_compile_btn").click(function(){
         $("#compiling_user").hide(200)
-        $("#log_message textarea").text("");
+        var cpus = $("#cpus button").attr("value")
+        isCompile=false
         $.ajax({
            url:"stop_compile",
            type:"GET",
+           data:{"cpus":cpus},
            dataType:"json",
            success:function(data){
            }
@@ -381,6 +406,7 @@ $(document).ready(function(){
 
 //刷新页面后，会去获取当前正在编译的用户
 window.onload=function(){
+    //显示三台机器是否有人正在编译
     $.ajax({
         url:"is_user_compile",
         type:"GET",

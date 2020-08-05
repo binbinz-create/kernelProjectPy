@@ -17,4 +17,5 @@ urlpatterns=[
     path("login_judge",compilekernel.views.login_judge),
     path("exit_login",compilekernel.views.exit_login),
     path("is_user_compile",compilekernel.views.is_user_compile),
+    path("compile_message",compilekernel.views.compile_message),
 ]
