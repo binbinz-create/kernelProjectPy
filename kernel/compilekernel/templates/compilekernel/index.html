@@ -13,7 +13,7 @@
     <!--导航栏-->
     <div  class="row">
         <div class="col-md-8 col-md-offset-2" style="padding-left: 0px; padding-right: 0px;" >
-            <nav class=" navbar navbar-default" style="box-shadow: 0px 5px 10px #888888; background-color: #FFFFFF; padding-top: 20px; padding-bottom: 10px;">
+            <nav class="navbar navbar-default" style="box-shadow: 0px 5px 10px #888888; background-color: #FFFFFF; padding-top: 20px; padding-bottom: 10px;">
                 <div class="container-fluid" >
                     <div  class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <h1 style=" text-shadow: 3px 3px 0 #F8F4EE; text-align: center; color: #2C1D00; font-family: oswald,helvetica,sans-serif !important;font-size: 3em;font-weight: bold;" >The Linux Kernel Compile</h1>
@@ -22,7 +22,7 @@
                             <li><a href="#">Changelog</a></li>
                             <li style="float: right !important;">
                                 <div class="btn-group " style="margin-top: 15px;">
-                                  <a type="button" style="background-color: #ffffff;" class="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <a type="button" style="background-color: #ffffff;" class="" id="user_name" value="{{ request.session.user }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                    {{ request.session.user }} <span class="caret"></span>
                                   </a>
                                   <ul class="dropdown-menu">
@@ -34,18 +34,18 @@
                             </li>
                             <li style="float: right !important; margin-right: 20px;">
                                 <div class="btn-group " style="margin-top: 15px;">
-                                  <a type="button" style="background-color: #ffffff;" class="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <a type="button" id="user_compiling" style="display:none ; background-color: #ffffff;" class="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                    正在编译的用户 <span class="caret"></span>
                                   </a>
                                   <ul class="dropdown-menu">
-                                    <li><a href="#" id="x86_compiling" style=" ">xxx:正在编译x86</a></li>
-                                    <li><a href="#" id="arm_compiling" style=" ">xxx:正在编译arm</a></li>
-                                    <li><a href="#" id="mips_compiling" style=" ">xxx:正在编译mips</a></li>
+                                    <li><a href="#" id="x86_compiling" style="display: none;">xxx:正在编译x86</a></li>
+                                    <li><a href="#" id="arm_compiling" style="display: none;">xxx:正在编译arm</a></li>
+                                    <li><a href="#" id="mips_compiling" style="display: none;">xxx:正在编译mips</a></li>
                                   </ul>
                                </div>
                             </li>
                             <li style="float: right !important; margin-right: 20px;">
-                                <a href="#"  style="display: none;" id="compiling_state">状态：正在编译</a>
+                                <a href=""  style="display: none;" id="compiling_state">状态：正在编译</a>
                             </li>
                         </ul>
                     </div>
@@ -119,7 +119,7 @@
                 <h1 class="h1_title">下载链接</h1>
                 <!--下载-->
                 <a href="download_kernel"  id="down_kernel" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px;">download kernel</a>
-                <a href="download_log" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px; margin-left: 20px;">download build.log</a>
+                <a href="#" id="download_log" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px; margin-left: 20px;">download build.log</a>
             </div>
 
         </div>
@@ -254,6 +254,7 @@ $(document).ready(function(){
 
     //是否还在编译
     var isCompile = true
+
     //点击开始编译的按钮
     $("#start_compile_btn").click(function(){
         //clear log information
@@ -265,20 +266,27 @@ $(document).ready(function(){
         });
         //除了停止编译按钮，其余的都禁用掉
         disableBtn();
-        //显示当前用户的状态为正在编译
-        $("#compiling_state").show(200)
-        //编译的相关信息都放在用户正在编译的链接里面
         var cpus=$("#cpus button").attr("value");
-//        var version=$("#version button").attr("value");
-//        var branch=$("#branch button").attr("value");
-//        var file="";
-//        $.each($('input[type=checkbox]:checked'),function(){
-//            file+=$(this).val()+"     ";
-//        });
-//        href = "compile_page?branch="+branch+"&version="+version+"&file="+file+"&cpus="+cpus
-//        $("#compiling_state").attr("href",href)
+        //The compile state of the current user
         $("#compiling_state").show(100)
-        $("#compiling_state").attr("href","compile_page&cpus="+cpus)
+        $("#compiling_state").attr("href","compile_page?cpus="+cpus)
+        //增加 user:正在编译xxx
+        var username = $("#user_name").attr("value")
+        if(cpus=="x86") {
+            $("#user_compiling").show(200)
+            $("#x86_compiling").text(username + ":正在编译x86")
+            $("#x86_compiling").show(100)
+        }else if(cpus=="arm"){
+            $("#user_compiling").show(200)
+            $("#arm_compiling").text(username+":正在编译arm")
+            $("#arm_compiling").show(100)
+        }else if(cpus=="mips"){
+            $("#user_compiling").show(200)
+            $("#mips_compiling").text(username+":正在编译mips")
+            $("#mips_compiling").show(100)
+        }
+
+
         /*=============================================拉取日志=============================================== */
         //初始行号
         var nu = 0
@@ -352,23 +360,34 @@ $(document).ready(function(){
         $("#start_compile_btn").attr("disabled","disabled");
         $("#start_compile_btn").addClass("disabled");
 
-        $(".navbar-nav a").attr("disabled","disabled");
-        $(".navbar-nav a").addClass("disabled");
+      //  $(".navbar-nav a").attr("disabled","disabled");
+     //   $(".navbar-nav a").addClass("disabled");
 
         $("#stop_compile_btn").show(200);
     }
 
     //点击停止编译的按钮
     $("#stop_compile_btn").click(function(){
-        $("#compiling_user").hide(200)
-        var cpus = $("#cpus button").attr("value")
-        isCompile=false
+        $("#compiling_user").hide(200);
+        var cpus = $("#cpus button").attr("value");
+
+        //Hides the state and who is compiling
+        $("#compiling_state").hide(200)
+        if (cpus == "x86") {
+            $("#x86_compiling").hide();
+        } else if (cpus == "arm") {
+            $("#arm_compiling").hide();
+        } else if (cpus == "mips") {
+            $("#mips_compiling").hide();
+        }
+        isCompile = false;
         $.ajax({
            url:"stop_compile",
            type:"GET",
            data:{"cpus":cpus},
            dataType:"json",
            success:function(data){
+               $("#download_log").attr("href","ftp://"+data.IP+"/robot/build.log")
            }
         });
         enableBtn()
@@ -406,18 +425,43 @@ $(document).ready(function(){
 
 //刷新页面后，会去获取当前正在编译的用户
 window.onload=function(){
+    //Displays the current state of user , such as compile , queue
+    $.ajax({
+       url:"user_state",
+       type:"GET",
+       dataType:"json",
+       data:{"username":$("#user_name").attr("value")},
+       success:function(data){
+           if(data.compile_cpus!=null){
+                $("#compiling_state").show(100)
+                $("#compiling_state").attr("href","compile_page?cpus="+data.compile_cpus)
+           }
+       }
+    });
     //显示三台机器是否有人正在编译
     $.ajax({
         url:"is_user_compile",
         type:"GET",
         dataType:"json",
         success:function(data){
-            if(data.compiling_user!=null) {
-                $("#compiling_user").show(200)
-                $("#compiling_user a").text("")
-                $("#compiling_user a").text(data.compiling_user+"正在编译")
-                href = "compile_page?branch="+data.branch+"&version="+data.version+"&file="+data.file+"&cpus="+data.cpus
-                $("#compiling_user a").attr("href",href)
+            console.log($.isEmptyObject(data.x86_compiling_message))
+            if(!$.isEmptyObject(data.x86_compiling_message)) {
+                $("#user_compiling").show(200)
+                $("#x86_compiling").attr("user",data.x86_compiling_message.user)
+                $("#x86_compiling").text(data.x86_compiling_message.user+":正在编译x86")
+                $("#x86_compiling").show(100)
+            }
+            if(!$.isEmptyObject(data.arm_compiling_message)){
+                $("#user_compiling").show(200)
+                $("#arm_compiling").attr("user",data.arm_compiling_message.user)
+                $("#arm_compiling").text(data.arm_compiling_message.user+":正在编译arm")
+                $("#arm_compiling").show(100)
+            }
+            if(!$.isEmptyObject(data.mips_compiling_message)){
+                $("#user_compiling").show(200)
+                $("#mips_compiling").attr("user",data.mips_compiling_message.user)
+                $("#mips_compiling").text(data.mips_compiling_message.user+":正在编译mips")
+                $("#mips_compiling").show(100)
             }
         }
     });

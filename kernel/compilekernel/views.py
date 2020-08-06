@@ -99,6 +99,7 @@ def start_compile(request):
         mips_compiling_message["branch"]=branch
         mips_compiling_message["version"]=version
         mips_compiling_message["file"] = file
+    print(x86_compiling_message)
     #获取配置文件
     setting_files = ''
     for file in files.strip().split(' '):
@@ -154,12 +155,16 @@ def stop_compile(request):
         IP=Config.MIPS_IP
         ROOT_PASSWD=Config.MIPS_ROOT_PASSWD
         mips_compiling_message.clear()
-    list_pid = client_to_server(IP,"ps aux | grep build | awk '{print $2}'")
+    list_pid = client_to_server(IP, "ps aux | grep build | awk '{print $2}'")
     command = "echo "+ROOT_PASSWD+" | sudo -S kill -9 "
     for pid in list_pid:
         command += pid + " "
+    #kill the compiling process
+    client_to_server(IP, command)
+    #move the build.log to /var/data/ftpdata/robot/
+    command="echo "+ROOT_PASSWD+" | sudo -S mv /tmp/klinux/build.log /var/data/ftpdata/robot/"
     client_to_server(IP,command)
-    return JsonResponse({"stop":1})
+    return JsonResponse({"stop":1,"IP":IP})
 
 #用于js定时返回日志
 def pull_log(request):
@@ -184,13 +189,7 @@ def pull_log(request):
         nu = int(build_log_nu) if nu > int(build_log_nu) else nu
         return JsonResponse({"build_process_number":build_process_number,"nu":nu,"build_log_nu":build_log_nu})
 
-#用于下载日志
-def download_log(request):
-    file=open(exec("cd ~ ; pwd")[0]+"/klinux/build.log","rb")
-    response =  HttpResponse(file)
-    response["Content-Type"] = 'application/octet-stream'
-    response["Content-Disposition"] = 'attachment;filename="build.log"'
-    return response
+
 
 #用于获取内核包的名字
 def get_kernel_name(request):
@@ -246,3 +245,15 @@ def compile_message(request):
         compiling_message=mips_compiling_message
     return JsonResponse({"compiling_message":compiling_message})
 
+#return the current state of user , such as compile , queue and others
+def user_state(request):
+    user_name = request.GET.get("username")
+    #The cpus that current user is compiling
+    compile_cpus = None
+    if len(x86_compiling_message)!=0 and x86_compiling_message["user"] == user_name:
+        compile_cpus="x86"
+    elif len(arm_compiling_message)!=0 and arm_compiling_message["user"] == user_name:
+        compile_cpus="arm"
+    elif len(mips_compiling_message)!=0 and mips_compiling_message["user"] == user_name:
+        compile_cpus="mips"
+    return JsonResponse({"compile_cpus":compile_cpus})

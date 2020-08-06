@@ -11,7 +11,7 @@
 </head>
 <body style="background-color: #F0EDE3;">
     <!-- Be used to record which cpus information are displayed on the current page -->
-    <input type="hidden" id="cpus" value="{{ request.cpus }}" />
+    <input type="hidden" id="cpus" value="{{ cpus }}" />
     <!--导航栏-->
     <div  class="row">
         <div class="col-md-8 col-md-offset-2" style="padding-left: 0px; padding-right: 0px;" >
@@ -40,9 +40,9 @@
                                    正在编译的用户 <span class="caret"></span>
                                   </a>
                                   <ul class="dropdown-menu">
-                                    <li><a href="#" id="x86_compiling" style=" ">xxx:正在编译x86</a></li>
-                                    <li><a href="#" id="arm_compiling" style=" ">xxx:正在编译arm</a></li>
-                                    <li><a href="#" id="mips_compiling" style=" ">xxx:正在编译mips</a></li>
+                                    <li><a href="#" id="x86_compiling" style="display: none;">xxx:正在编译x86</a></li>
+                                    <li><a href="#" id="arm_compiling" style="display: none;">xxx:正在编译arm</a></li>
+                                    <li><a href="#" id="mips_compiling" style="display: none;">xxx:正在编译mips</a></li>
                                   </ul>
                                </div>
                             </li>
@@ -78,7 +78,7 @@
                 <h1 class="h1_title">下载链接</h1>
                 <!--下载-->
                 <a href="download_kernel"  id="down_kernel" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px;">download kernel</a>
-                <a href="download_log" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px; margin-left: 20px;">download build.log</a>
+                <a href="#" id="download_log" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px; margin-left: 20px;">download build.log</a>
             </div>
 
         </div>
@@ -96,6 +96,7 @@ $(document).ready(function(){
         //是否还在编译
         var isCompile = true
         //实时拉取日志
+        $("#log_message textarea").text("");
         function pulllog() {
             if(!isCompile)
                 return;
@@ -118,6 +119,7 @@ $(document).ready(function(){
             });
             setTimeout(pulllog,1000)
         }
+
         pulllog()
         $("#download_file").hide(200)
 
@@ -125,13 +127,24 @@ $(document).ready(function(){
 
     //点击停止编译的按钮
     $("#stop_compile_btn").click(function(){
-        $("#compiling_user").hide(200)
-        $("#log_message textarea").text("");
+
+        //Hide who is compiling
+        var cpus =  $("#cpus").val()
+        if (cpus == "x86") {
+            $("#x86_compiling").hide();
+        } else if (cpus == "arm") {
+            $("#arm_compiling").hide();
+        } else if (cpus == "mips") {
+            $("#mips_compiling").hide();
+        }
+
         $.ajax({
            url:"stop_compile",
+           data:{"cpus":cpus},
            type:"GET",
            dataType:"json",
            success:function(data){
+               $("#download_log").attr("href","ftp://"+data.IP+"/robot/build.log")
            }
         });
         enableBtn()
@@ -139,17 +152,6 @@ $(document).ready(function(){
 
     //将除停止编译以外的按钮都恢复，并且隐藏掉停止编译的按钮
     function enableBtn(){
-        $("#cpus button").removeAttr("disabled");
-        $("#cpus button").removeClass("disabled");
-
-        $("#version button").removeAttr("disabled");
-        $("#version button").removeClass("disabled");
-
-        $("#branch button").removeAttr("disabled");
-        $("#branch button").removeClass("disabled");
-
-        $("#file_select_btn").removeAttr("disabled");
-        $("#file_select_btn").removeClass("disabled");
 
         $("#start_compile_btn").removeAttr("disabled");
         $("#start_compile_btn").removeClass("disabled");
@@ -158,7 +160,7 @@ $(document).ready(function(){
         $(".navbar-nav a").removeClass("disabled");
 
         $("#stop_compile_btn").hide(200);
-        //显示日志打印
+        //显示日志下载
         $("#download_file").show(200)
         $("#down_kernel").hide()
     }
@@ -199,13 +201,25 @@ window.onload=function(){
         type:"GET",
         dataType:"json",
         success:function(data){
-            if(data.compiling_user!=null) {
-                $("#compiling_user").show(200)
-                $("#compiling_user a").text("")
-                $("#compiling_user a").text(data.compiling_user+"正在编译")
-                $("#compiling_user a").attr("href","compile_page")
+            console.log($.isEmptyObject(data.x86_compiling_message))
+            if(!$.isEmptyObject(data.x86_compiling_message)) {
+                $("#user_compiling").show(200)
+                $("#x86_compiling").attr("user",data.x86_compiling_message.user)
+                $("#x86_compiling").text(data.x86_compiling_message.user+":正在编译x86")
+                $("#x86_compiling").show(100)
             }
-
+            if(!$.isEmptyObject(data.arm_compiling_message)){
+                $("#user_compiling").show(200)
+                $("#arm_compiling").attr("user",data.arm_compiling_message.user)
+                $("#arm_compiling").text(data.arm_compiling_message.user+":正在编译arm")
+                $("#arm_compiling").show(100)
+            }
+            if(!$.isEmptyObject(data.mips_compiling_message)){
+                $("#user_compiling").show(200)
+                $("#mips_compiling").attr("user",data.mips_compiling_message.user)
+                $("#mips_compiling").text(data.mips_compiling_message.user+":正在编译mips")
+                $("#mips_compiling").show(100)
+            }
         }
     });
 }

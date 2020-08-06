@@ -68,7 +68,7 @@ for log in logs:
     print(log)
 '''
 
-logs = client_to_server(Config.X86_IP,"ls /")
+logs = client_to_server("172.19.140.166","ps aux | grep build")
 for log in logs:
     print(log)
 
