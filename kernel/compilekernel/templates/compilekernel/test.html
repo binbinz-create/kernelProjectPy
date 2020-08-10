@@ -1,10 +1,39 @@
 <html>
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>The Linux Kernel Archives</title>
+    <script src="{% static 'compilekernel/js/jquery.js' %}" ></script>
 </head>
 <body>
 <h1>Hello world</h1>
-<a href="ftp://172.16.31.225/robot/build.log">download</a>
+<button id="btn">button</button>
 </body>
+<script>
+$(document).ready(function(){
+
+    $("#btn").click(function(){
+
+        var exit = 0;
+        $.ajax({
+            async:false,
+            url:"test1",
+            type:"GET",
+            dataType:"json",
+            success:function(data){
+                alert("ajax")
+                exit = 1;
+            }
+        })
+
+        if(exit==1){
+            return false;
+        }
+
+        alert("click")
+
+    })
+
+})
+</script>
 </html>

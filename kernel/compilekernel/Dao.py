@@ -34,5 +34,7 @@ class Dao:
             cur.close()
 
 dao = Dao()
-results =  dao.executeQuerySql("select * from tbl_user")
-print(results[0])
+username = 'zhubin'
+uid=1
+results =  dao.executeQuerySql("select * from tbl_record where id = (select max(id) from tbl_record) and uid = '%s' " % (uid))[0]
+print(results)

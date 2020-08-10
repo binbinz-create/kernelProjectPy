@@ -20,8 +20,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="428621be-7b20-4039-b4bf-a5103229cbab" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/compile_record.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kernel/compilekernel/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/compilekernel/Dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/Dao.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/compiling.html" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/compiling.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/test.html" afterDir="false" />
@@ -63,7 +65,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="full.screen.before.presentation.mode" value="false" />
     <property name="js.buildTools.grunt.grunt-cli.package" value="" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="restartRequiresConfirmation" value="false" />
@@ -269,7 +271,7 @@
       <workItem from="1596416133691" duration="870000" />
       <workItem from="1596417288316" duration="2218000" />
       <workItem from="1596420533138" duration="73380000" />
-      <workItem from="1596675122347" duration="26767000" />
+      <workItem from="1596675122347" duration="73611000" />
     </task>
     <servers />
   </component>
@@ -293,10 +295,10 @@
       <screen x="0" y="0" width="1600" height="854" />
     </state>
     <state x="372" y="150" key="#HTTP_Proxy/0.0.1600.854@0.0.1600.854" timestamp="1595579081299" />
-    <state x="214" y="98" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1595579496658">
+    <state x="214" y="98" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1597028459126">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state x="214" y="98" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1600.854@0.0.1600.854" timestamp="1595579496658" />
+    <state x="214" y="98" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1600.854@0.0.1600.854" timestamp="1597028459126" />
     <state x="96" y="62" width="1408" height="742" key="DiffContextDialog" timestamp="1595396013876">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
@@ -309,42 +311,46 @@
       <screen x="0" y="0" width="1600" height="854" />
     </state>
     <state x="584" y="181" key="FileChooserDialogImpl/0.0.1600.854@0.0.1600.854" timestamp="1596174242165" />
-    <state width="1600" height="51" key="GridCell.Tab.0.bottom" timestamp="1596706577162">
+    <state width="1600" height="145" key="GridCell.Tab.0.bottom" timestamp="1597044228854">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state width="1600" height="51" key="GridCell.Tab.0.bottom/0.0.1600.854@0.0.1600.854" timestamp="1596706577162" />
-    <state width="1600" height="51" key="GridCell.Tab.0.center" timestamp="1596706577162">
+    <state width="1600" height="145" key="GridCell.Tab.0.bottom/0.0.1600.854@0.0.1600.854" timestamp="1597044228854" />
+    <state width="1600" height="145" key="GridCell.Tab.0.center" timestamp="1597044228854">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state width="1600" height="51" key="GridCell.Tab.0.center/0.0.1600.854@0.0.1600.854" timestamp="1596706577162" />
-    <state width="1600" height="51" key="GridCell.Tab.0.left" timestamp="1596706577162">
+    <state width="1600" height="145" key="GridCell.Tab.0.center/0.0.1600.854@0.0.1600.854" timestamp="1597044228854" />
+    <state width="1600" height="145" key="GridCell.Tab.0.left" timestamp="1597044228853">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state width="1600" height="51" key="GridCell.Tab.0.left/0.0.1600.854@0.0.1600.854" timestamp="1596706577162" />
-    <state width="1600" height="51" key="GridCell.Tab.0.right" timestamp="1596706577162">
+    <state width="1600" height="145" key="GridCell.Tab.0.left/0.0.1600.854@0.0.1600.854" timestamp="1597044228853" />
+    <state width="1600" height="145" key="GridCell.Tab.0.right" timestamp="1597044228854">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state width="1600" height="51" key="GridCell.Tab.0.right/0.0.1600.854@0.0.1600.854" timestamp="1596706577162" />
-    <state width="1600" height="2" key="GridCell.Tab.1.bottom" timestamp="1596684802209">
+    <state width="1600" height="145" key="GridCell.Tab.0.right/0.0.1600.854@0.0.1600.854" timestamp="1597044228854" />
+    <state width="1600" height="2" key="GridCell.Tab.1.bottom" timestamp="1597041595761">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state width="1600" height="2" key="GridCell.Tab.1.bottom/0.0.1600.854@0.0.1600.854" timestamp="1596684802209" />
-    <state width="1600" height="2" key="GridCell.Tab.1.center" timestamp="1596684802209">
+    <state width="1600" height="2" key="GridCell.Tab.1.bottom/0.0.1600.854@0.0.1600.854" timestamp="1597041595761" />
+    <state width="1600" height="2" key="GridCell.Tab.1.center" timestamp="1597041595761">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state width="1600" height="2" key="GridCell.Tab.1.center/0.0.1600.854@0.0.1600.854" timestamp="1596684802209" />
-    <state width="1600" height="2" key="GridCell.Tab.1.left" timestamp="1596684802209">
+    <state width="1600" height="2" key="GridCell.Tab.1.center/0.0.1600.854@0.0.1600.854" timestamp="1597041595761" />
+    <state width="1600" height="2" key="GridCell.Tab.1.left" timestamp="1597041595761">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state width="1600" height="2" key="GridCell.Tab.1.left/0.0.1600.854@0.0.1600.854" timestamp="1596684802209" />
-    <state width="1600" height="2" key="GridCell.Tab.1.right" timestamp="1596684802209">
+    <state width="1600" height="2" key="GridCell.Tab.1.left/0.0.1600.854@0.0.1600.854" timestamp="1597041595761" />
+    <state width="1600" height="2" key="GridCell.Tab.1.right" timestamp="1597041595761">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state width="1600" height="2" key="GridCell.Tab.1.right/0.0.1600.854@0.0.1600.854" timestamp="1596684802209" />
-    <state x="384" y="161" key="IDE.errors.dialog" timestamp="1596614903690">
+    <state width="1600" height="2" key="GridCell.Tab.1.right/0.0.1600.854@0.0.1600.854" timestamp="1597041595761" />
+    <state width="273" height="606" key="HiddenNamespacesPopup" timestamp="1597028490784">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state x="384" y="161" key="IDE.errors.dialog/0.0.1600.854@0.0.1600.854" timestamp="1596614903690" />
+    <state width="273" height="606" key="HiddenNamespacesPopup/0.0.1600.854@0.0.1600.854" timestamp="1597028490784" />
+    <state x="384" y="161" key="IDE.errors.dialog" timestamp="1597037134776">
+      <screen x="0" y="0" width="1600" height="854" />
+    </state>
+    <state x="384" y="161" key="IDE.errors.dialog/0.0.1600.854@0.0.1600.854" timestamp="1597037134776" />
     <state x="14" y="112" width="1037" height="742" key="SettingsEditor" timestamp="1596675055089">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
@@ -365,30 +371,25 @@
       <screen x="0" y="0" width="1600" height="854" />
     </state>
     <state x="570" y="333" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1600.854@0.0.1600.854" timestamp="1596004841471" />
-    <state x="326" y="84" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1596684131571">
+    <state x="326" y="84" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1597030666341">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state x="326" y="84" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1600.854@0.0.1600.854" timestamp="1596684131571" />
+    <state x="326" y="84" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1600.854@0.0.1600.854" timestamp="1597030666341" />
     <state x="198" y="127" width="1248" height="746" key="dock-window-1" timestamp="1596676146225">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
     <state x="198" y="127" width="1248" height="746" key="dock-window-1/0.0.1600.854@0.0.1600.854" timestamp="1596676146225" />
-    <state x="463" y="168" width="676" height="684" key="search.everywhere.popup" timestamp="1596004849197">
+    <state x="463" y="168" width="676" height="684" key="search.everywhere.popup" timestamp="1597029892323">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state x="463" y="168" width="676" height="684" key="search.everywhere.popup/0.0.1600.854@0.0.1600.854" timestamp="1596004849197" />
+    <state x="463" y="168" width="676" height="684" key="search.everywhere.popup/0.0.1600.854@0.0.1600.854" timestamp="1597029892323" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/kernel/compilekernel/views.py</url>
-          <line>236</line>
-          <option name="timeStamp" value="30" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/kernel/compilekernel/views.py</url>
-          <line>33</line>
+          <line>36</line>
           <option name="timeStamp" value="31" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
@@ -396,13 +397,35 @@
           <line>51</line>
           <option name="timeStamp" value="37" />
         </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/kernel/compilekernel/views.py</url>
+          <line>142</line>
+          <option name="timeStamp" value="57" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/kernel/compilekernel/views.py</url>
+          <line>116</line>
+          <option name="timeStamp" value="58" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/kernel/compilekernel/views.py</url>
+          <line>78</line>
+          <option name="timeStamp" value="59" />
+        </line-breakpoint>
       </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/kernelProjectPy$Dao.coverage" NAME="Dao Coverage Results" MODIFIED="1595810716140" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
+    <SUITE FILE_PATH="coverage/kernelProjectPy$Dao.coverage" NAME="Dao Coverage Results" MODIFIED="1597026751162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
     <SUITE FILE_PATH="coverage/kernelProjectPy$utils.coverage" NAME="utils Coverage Results" MODIFIED="1594381709274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
-    <SUITE FILE_PATH="coverage/kernelProjectPy$tests.coverage" NAME="tests Coverage Results" MODIFIED="1596699744076" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
+    <SUITE FILE_PATH="coverage/kernelProjectPy$tests.coverage" NAME="tests Coverage Results" MODIFIED="1597041725767" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
     <SUITE FILE_PATH="coverage/kernelProjectPy$test1.coverage" NAME="test1 Coverage Results" MODIFIED="1595553467945" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
     <SUITE FILE_PATH="coverage/kernelProjectPy$views.coverage" NAME="views Coverage Results" MODIFIED="1595222105061" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
   </component>

@@ -34,7 +34,7 @@
                             </li>
                             <li style="float: right !important; margin-right: 20px;">
                                 <div class="btn-group " style="margin-top: 15px;">
-                                  <a type="button" id="user_compiling" style="display:none ; background-color: #ffffff;" class="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <a type="button" id="user_compiling" style="display: none; background-color: #ffffff;" class="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                    正在编译的用户 <span class="caret"></span>
                                   </a>
                                   <ul class="dropdown-menu">
@@ -44,8 +44,14 @@
                                   </ul>
                                </div>
                             </li>
-                            <li style="float: right !important; margin-right: 20px;">
-                                <a href=""  style="display: none;" id="compiling_state">状态：正在编译</a>
+                            <li style="float: right !important; margin-right: 0px;">
+                                <a href=""  style="display: none;" id="compiling_state_x86">状态：正在编译x86</a>
+                            </li>
+                            <li style="float: right !important; margin-right: 0px;">
+                                <a href=""  style="display: none;" id="compiling_state_arm">状态：正在编译arm</a>
+                            </li>
+                            <li style="float: right !important; margin-right: 0px;">
+                                <a href=""  style="display: none;" id="compiling_state_mips">状态：正在编译mips</a>
                             </li>
                         </ul>
                     </div>
@@ -118,7 +124,7 @@
             <div id="download_file" style="display: none; margin-top: 20px; margin-left: 25px;">
                 <h1 class="h1_title">下载链接</h1>
                 <!--下载-->
-                <a href="download_kernel"  id="down_kernel" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px;">download kernel</a>
+                <a href="#"  id="down_kernel" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px;">download kernel</a>
                 <a href="#" id="download_log" style="color: #249aff; font-size: 16px; font-weight: bold; margin-top: 10px; margin-left: 20px;">download build.log</a>
             </div>
 
@@ -257,6 +263,25 @@ $(document).ready(function(){
 
     //点击开始编译的按钮
     $("#start_compile_btn").click(function(){
+        //Judge if angone is compiling and if you need to wait
+        var cpus=$("#cpus button").attr("value");
+        var flag_wait = false;
+        $.ajax({
+            async:false,
+            url:"judge_compile",
+            data:{"cpus":cpus},
+            type:"GET",
+            dataType:"json",
+            success:function(data){
+                if(data.wait==1){
+                    alert(data.compiling_message.user+"正在编译"+data.compiling_message.cpus+",请等候")
+                    flag_wait=true;
+                }
+            }
+        })
+        if(flag_wait)
+            return false;
+
         //clear log information
         $("#log_message textarea").text("");
         $("#log_message").show(200);
@@ -266,10 +291,9 @@ $(document).ready(function(){
         });
         //除了停止编译按钮，其余的都禁用掉
         disableBtn();
-        var cpus=$("#cpus button").attr("value");
         //The compile state of the current user
-        $("#compiling_state").show(100)
-        $("#compiling_state").attr("href","compile_page?cpus="+cpus)
+        $("#compiling_state_"+cpus).show(100)
+        $("#compiling_state_"+cpus).attr("href","compile_page?cpus="+cpus)
         //增加 user:正在编译xxx
         var username = $("#user_name").attr("value")
         if(cpus=="x86") {
@@ -292,13 +316,14 @@ $(document).ready(function(){
         var nu = 0
         isCompile=true
         var obj = document.getElementById("my");
+        var username=$("#user_name").attr("value")
         //实时拉取日志
         function pulllog() {
             if(!isCompile)
                 return;
             $.ajax({
                 url: "pulllog",
-                data: {"nu":nu,"cpus":cpus},
+                data: {"nu":nu,"cpus":cpus,"username":username},
                 type: "GET",
                 dataType: "json",
                 success: function (data) {
@@ -334,9 +359,20 @@ $(document).ready(function(){
             dataType: "json",
             success:function(data){
                 if(data.success==1){
+                   isCompile=false
+                   file = data.file_path.toString().split("ftpdata")[1]
                    $("#down_kernel").text(data.file_name);
-                   $("#down_kernel").attr("href","download_kernel?file_path="+data.file_path);
+                   $("#down_kernel").attr("href","ftp://"+data.IP+file);
+                   $("#download_log").attr("href","ftp://"+data.IP+"/robot/"+data.date+"/"+"build.log");
                    $("#download_file").show(200)
+                   enableBtn()
+                   $("#down_kernel").show(200)
+                   //hide the compiling state and who is compiling
+                   $("#compiling_state_"+data.cpus).hide();
+                   $("#"+data.cpus+"_compiling").hide()
+                    pulllog()
+                }else if(data.success==0){
+                    alert("编译失败")
                 }
             }
         });
@@ -360,7 +396,7 @@ $(document).ready(function(){
         $("#start_compile_btn").attr("disabled","disabled");
         $("#start_compile_btn").addClass("disabled");
 
-      //  $(".navbar-nav a").attr("disabled","disabled");
+     //   $(".navbar-nav a").attr("disabled","disabled");
      //   $(".navbar-nav a").addClass("disabled");
 
         $("#stop_compile_btn").show(200);
@@ -372,7 +408,7 @@ $(document).ready(function(){
         var cpus = $("#cpus button").attr("value");
 
         //Hides the state and who is compiling
-        $("#compiling_state").hide(200)
+        $("#compiling_state_"+cpus).hide(200)
         if (cpus == "x86") {
             $("#x86_compiling").hide();
         } else if (cpus == "arm") {
@@ -433,8 +469,10 @@ window.onload=function(){
        data:{"username":$("#user_name").attr("value")},
        success:function(data){
            if(data.compile_cpus!=null){
-                $("#compiling_state").show(100)
-                $("#compiling_state").attr("href","compile_page?cpus="+data.compile_cpus)
+               $.each(data.compile_cpus,function(infoIndex,info){
+                   $("#compiling_state_"+info).show(100)
+                   $("#compiling_state_"+info).attr("href","compile_page?cpus="+info)
+               });
            }
        }
     });
@@ -444,7 +482,6 @@ window.onload=function(){
         type:"GET",
         dataType:"json",
         success:function(data){
-            console.log($.isEmptyObject(data.x86_compiling_message))
             if(!$.isEmptyObject(data.x86_compiling_message)) {
                 $("#user_compiling").show(200)
                 $("#x86_compiling").attr("user",data.x86_compiling_message.user)

@@ -1,4 +1,5 @@
 import os
+import time
 from django.shortcuts import render
 from compilekernel.utils import git_without_passwd
 from compilekernel.utils import exec
@@ -9,7 +10,6 @@ from django.http import JsonResponse
 # Create your views here.
 #直接跳转到index.html页面
 from compilekernel.Dao import Dao
-
 
 #使用全局变量记录各台机器正在编译的用户,cps架构，分支，版本，配置文件等等
 
@@ -23,6 +23,9 @@ file=None
 x86_compiling_message={}
 arm_compiling_message={}
 mips_compiling_message={}
+#用于在切换到compiling.html时，来判断是否还在编译。（是否正常完成编译，key：username_cpus   value：0代表正在编译，1代表正常完成编译，2代表手动停止编译）
+user_compile={}
+
 
 def to_index(request):
     return render(request, "compilekernel/index.html", None)
@@ -33,6 +36,11 @@ def to_login(request):
 def to_compile(request):
     cpus = request.GET.get("cpus");
     return render(request,"compilekernel/compiling.html",{"cpus":cpus})
+
+#跳转到编译记录的页面
+def to_compile_record(request):
+    user = request.GET.get("user")
+    return render(request,"compilekernel/compile_record.html",{"user":user})
 
 #直接跳转到test.html页面
 def to_test(request):
@@ -67,8 +75,9 @@ def file_list(request):
 
 #点击开始编译按钮进行编译
 def start_compile(request):
-    global x86_compiling_message,arm_compiling_message,mips_compiling_message
+    global x86_compiling_message,arm_compiling_message,mips_compiling_message,user_compile
     cpus = request.GET.get("cpus")
+
     #choose ip and root password according to cpus,set the user being compiled,configuration information , etc.
     username = request.session.get("user",default=None)
     files = str(request.GET.get("file"))
@@ -99,13 +108,13 @@ def start_compile(request):
         mips_compiling_message["branch"]=branch
         mips_compiling_message["version"]=version
         mips_compiling_message["file"] = file
-    print(x86_compiling_message)
     #获取配置文件
     setting_files = ''
     for file in files.strip().split(' '):
         setting_files+="arch/"+cpus+"/configs/"+file+" "
     command = "cd /tmp/klinux; echo "+ROOT_PASSWD+" | sudo -S rm -rf build.log ; echo "+ROOT_PASSWD+" | sudo -S touch build.log ; echo "+ROOT_PASSWD+" | sudo -S chmod 666 build.log ; echo "+ROOT_PASSWD+" | sudo -S  ./scripts/buildpackage.sh "+setting_files[:-2]+ " >> build.log"
     #进行编译
+    user_compile[username+"_"+cpus]=0; #正常编译
     client_to_server_compile(IP,command)
     #编译结束后,将正在编译的用户设置为空
     if cpus == "x86":
@@ -116,15 +125,15 @@ def start_compile(request):
         mips_compiling_message.clear()
     #判断是否编译成功（有可能编译时，点击了停止编译）
     deb_num = client_to_server(Config.X86_IP,"ls  /tmp | grep -E .*deb | wc -l")[0]
-    #~没有*deb文件，则表明没有编译成功
+    #/tmp目录下没有*deb文件，则表明没有编译成功
     if int(deb_num) < 4:
        return JsonResponse({"success":0})
     #编译完成之后打包操作
-    client_to_server(IP,"cd /tmp/klinux ; rm -rf scripts/tar_kernel.sh")
+    client_to_server_compile(IP,"cd /tmp/klinux ; echo "+ROOT_PASSWD+" | sudo -S rm -rf scripts/tar_kernel.sh")
     for command in AfterCompile.commands:
-        client_to_server_compile("echo \""+command+"\" >> /tmp/klinux/scripts/tar_kernel.sh")
+        client_to_server_compile(IP,"echo "+ROOT_PASSWD+" | sudo -S echo \""+command+"\" >> /tmp/klinux/scripts/tar_kernel.sh")
     #run tar_kernel.sh and return such as file path , branch version , architecture, suffix , date
-    results =  client_to_server_compile(IP,"cd /tmp/klinux/scripts ; chmod 777 /tmp/klinux/scripts/tar_kernel.sh ;  ./tar_kernel.sh")
+    results =  client_to_server_compile(IP,"cd /tmp/klinux/scripts ; echo "+ROOT_PASSWD+" | sudo -S  chmod 777 /tmp/klinux/scripts/tar_kernel.sh ; echo "+ROOT_PASSWD+" | sudo -S ./tar_kernel.sh")
     file_path = results[-6]
     file_name = results[-6].split('/')[-1]
     kernel_version = results[-5]  #主线版本
@@ -132,11 +141,30 @@ def start_compile(request):
     suffix = results[-3]          #个性版本
     branch_version = results[-2]  #分支版本
     date = results[-1]            #时间
+    #mv build.log to the same directory as kernel
+    client_to_server_compile(IP,"echo "+ROOT_PASSWD+" | sudo -S cp /tmp/klinux/build.log /var/data/ftpdata/robot/"+date)
     #The above data will then be stored in the database
-    return JsonResponse({"file_path":file_path,"file_name":file_name,
+    dao = Dao()
+    uid = dao.executeQuerySql("select id from tbl_user where user_name = '%s'"% (username))[0][0];
+    dao.executeSql("insert into tbl_record (uid,file_path,file_name,kernel_version,architecture,suffix,branch_version,date) "
+                   "values ('%s','%s','%s','%s','%s','%s','%s','%s')" % (uid,file_path,file_name,kernel_version,architecture,suffix,branch_version,date))
+    user_compile[username + "_" + cpus] = 1;  # 将状态改为正常完成编译
+    return JsonResponse({"cpus":cpus,"file_path":file_path,"file_name":file_name,
                          "kernel_version":kernel_version,"architecture":architecture,
-                         "suffix":suffix,"branch_version":branch_version,"date":date,"success":1})
+                         "suffix":suffix,"branch_version":branch_version,"date":date,"IP":IP,"success":1})
 
+#判断是否有人在编译
+def judge_compile(request):
+    global x86_compiling_message,arm_compiling_message,mips_compiling_message
+    cpus = request.GET.get("cpus");
+    if cpus == 'x86' and len(x86_compiling_message) != 0:
+        return JsonResponse({"wait": 1, "compiling_message": x86_compiling_message})
+    elif cpus == 'arm' and len(arm_compiling_message) != 0:
+        return JsonResponse({"wait": 1, "compiling_message": arm_compiling_message})
+    elif cpus == 'mips' and len(mips_compiling_message) != 0:
+        return JsonResponse({"wait": 1, "compiling_message": mips_compiling_message})
+    else:
+        return JsonResponse({"wait":0})
 #停止编译内核
 def stop_compile(request):
     global compiling_user
@@ -162,14 +190,16 @@ def stop_compile(request):
     #kill the compiling process
     client_to_server(IP, command)
     #move the build.log to /var/data/ftpdata/robot/
-    command="echo "+ROOT_PASSWD+" | sudo -S mv /tmp/klinux/build.log /var/data/ftpdata/robot/"
+    command="echo "+ROOT_PASSWD+" | sudo -S cp /tmp/klinux/build.log /var/data/ftpdata/robot/"
     client_to_server(IP,command)
     return JsonResponse({"stop":1,"IP":IP})
 
 #用于js定时返回日志
 def pull_log(request):
+    global user_compile
     nu = int(request.GET.get("nu"))
-    cpus = request.GET.get("cpus")
+    cpus = str(request.GET.get("cpus"))
+    username=str(request.GET.get("username"));
     IP = None
     if cpus == 'x86':
         IP = Config.X86_IP
@@ -180,30 +210,29 @@ def pull_log(request):
     build_log_nu = str(client_to_server_log(IP,"wc -l /tmp/klinux/build.log")[0]).split(' ')[0]
     #编译进程的数量
     build_process_number = client_to_server_log(IP,"ps aux | grep buildpackage | awk '{print $2}' | wc -l")
+    #当前用户是否正常完成编译
+    state = 0
+    if user_compile.__contains__(str(username+"_"+cpus)):
+        state = user_compile[str(username+"_"+cpus)];
     #如果当前build.log的行足够的话,则返回指定的行的日志
     if((nu+20)<int(build_log_nu)):
         log = client_to_server_log(IP,"tail -n 20 /tmp/klinux/build.log")
         return JsonResponse({"log":log,"nu":build_log_nu,"build_process_number":build_process_number,"build_log_nu":build_log_nu})
+    #如果正常完成了编译，则返回编译成功后的路径
+    elif state==1:
+        dao = Dao()
+        uid = dao.executeQuerySql("select id from tbl_user where user_name = '%s'" % (username))[0][0]
+        message =  dao.executeQuerySql("select * from tbl_record where id = (select max(id) from tbl_record) and uid = '%s' " % (uid))[0]
+        return JsonResponse({"cpus":cpus,"IP":IP,"message":message,"build_process_number": build_process_number, "nu": nu, "build_log_nu": build_log_nu})
     #如果不够的话，则返回进程数，查看是否编译过程已经结束
     else:
         nu = int(build_log_nu) if nu > int(build_log_nu) else nu
         return JsonResponse({"build_process_number":build_process_number,"nu":nu,"build_log_nu":build_log_nu})
 
-
-
 #用于获取内核包的名字
 def get_kernel_name(request):
     file_name = exec("cd ~/klinux; ls | grep -E rele*")[0]
     return JsonResponse({"name":file_name})
-
-#用于下载内核
-def download_kernel(request):
-    file_path = request.GET.get("file_path")
-    file = open(file_path,"rb")
-    response = HttpResponse(file)
-    response["Content-Type"] = 'application/octet-stream'
-    response["Content-Disposition"] = 'attachment;filename='+str(file_path).split('/')[-1]+''
-    return response
 
 #用于判断登录
 def login_judge(request):
@@ -249,11 +278,11 @@ def compile_message(request):
 def user_state(request):
     user_name = request.GET.get("username")
     #The cpus that current user is compiling
-    compile_cpus = None
+    compile_cpus = []
     if len(x86_compiling_message)!=0 and x86_compiling_message["user"] == user_name:
-        compile_cpus="x86"
-    elif len(arm_compiling_message)!=0 and arm_compiling_message["user"] == user_name:
-        compile_cpus="arm"
-    elif len(mips_compiling_message)!=0 and mips_compiling_message["user"] == user_name:
-        compile_cpus="mips"
+        compile_cpus.append("x86")
+    if len(arm_compiling_message)!=0 and arm_compiling_message["user"] == user_name:
+        compile_cpus.append("arm")
+    if len(mips_compiling_message)!=0 and mips_compiling_message["user"] == user_name:
+        compile_cpus.append("mips")
     return JsonResponse({"compile_cpus":compile_cpus})

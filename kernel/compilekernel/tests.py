@@ -43,14 +43,14 @@ print(results[-2]) #分支版本
 print(results[-1]) #时间
 print(results[-6].split('/')[-1]) #package name
 '''
-'''
+
 #杀死进程
 list_pid =  client_to_server(Config.X86_IP,"ps aux | grep build | awk '{print $2}'")
-command = "echo zhubin123 | sudo -S kill -9 "
+command = "echo 123123 | sudo -S kill -9 "
 for pid in list_pid:
     command+=pid+" "
 client_to_server(Config.X86_IP,command)
-'''
+
 '''
 exec("cd ~/klinux; echo "+Config.ROOT_PASSWD+" | rm -rf build.log ;echo "+Config.ROOT_PASSWD+" | sudo -S  ./scripts/buildpackage.sh  arch/x86/configs/kylin_common.config  >> build.log")
 status =  exec("echo $?")
@@ -67,9 +67,22 @@ logs=client_to_server(Config.X86_IP,"ls ~")
 for log in logs:
     print(log)
 '''
-
+'''
 logs = client_to_server("172.19.140.166","ps aux | grep build")
 for log in logs:
     print(log)
-
-
+'''
+'''
+client_to_server("172.16.31.225","cd /tmp/klinux ;echo zhubin123 | sudo -S rm -rf scripts/tar_kernel.sh")
+for command in AfterCompile.commands:
+    client_to_server("172.16.31.225","echo zhubin123 |  sudo -S echo \""+command+"\" >> /tmp/klinux/scripts/tar_kernel.sh")
+#run tar_kernel.sh and return such as file path , branch version , architecture, suffix , date
+results =  client_to_server("172.16.31.225","cd /tmp/klinux/scripts ;echo zhubin123 | sudo -S chmod 777 /tmp/klinux/scripts/tar_kernel.sh ; echo zhubin123 | sudo -S ./tar_kernel.sh")
+for log in results:
+    print(log)
+'''
+'''
+file_path = "/var/data/ftpdata/robot/2020-08-07_08_54/release-4.4.131-20200805-gc688576ee--package.tar.gz"
+paths =  file_path.split("ftpdata")
+print(paths[1])
+'''
