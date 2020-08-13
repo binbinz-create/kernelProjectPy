@@ -32,9 +32,3 @@ class Dao:
         finally:
             conn.close()
             cur.close()
-
-dao = Dao()
-username = 'zhubin'
-uid=1
-results =  dao.executeQuerySql("select * from tbl_record where id = (select max(id) from tbl_record) and uid = '%s' " % (uid))[0]
-print(results)

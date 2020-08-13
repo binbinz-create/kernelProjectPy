@@ -11,13 +11,13 @@ class Config:
     MIPS_ROOT_PASSWD="123123"
     GIT_ADDRESS="http://172.19.140.200/jiangdi/klinux.git"
     GIT_USER_NAME="jiangdi"
-    GIT_PASSWD="jd#180188"
+    GIT_PASSWD="Jd|180188"
     CREDENTIALS_1="http://"+GIT_USER_NAME+":jd%23180188@172.19.140.200"
     CREDENTIALS_2="https://"+GIT_USER_NAME+":"+GIT_PASSWD+"@172.19.140.200/jiangdi/klinux.git"
     ARM_IP="172.19.140.198"
-    #X86_IP="172.19.140.166"
-    X86_IP="172.16.31.225"
-    MIPS_IP="172.19.140.199"
+    X86_IP="172.19.140.166"
+    #X86_IP="172.29.33.133"
+    MIPS_IP="172.29.33.199"
 
 
 #编译完成之后的打包操作,shell ,参照release...

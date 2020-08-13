@@ -40,7 +40,17 @@ def to_compile(request):
 #跳转到编译记录的页面
 def to_compile_record(request):
     user = request.GET.get("user")
-    return render(request,"compilekernel/compile_record.html",{"user":user})
+    # Find out all compilation record of the user
+    dao = Dao()
+    records = dao.executeQuerySql("select * from tbl_record where uid = (select id from tbl_user where user_name=\'"+user+"\') order by date desc;")
+    return render(request,"compilekernel/compile_record.html",{"records":records})
+
+def to_compile_record_all(request):
+    #Find out all compilation record and render to compile_record_all.html
+    dao = Dao()
+    records = dao.executeQuerySql("select * from tbl_record order by date desc")
+    return render(request,"compilekernel/compile_record_all.html",{"records":records})
+
 
 #直接跳转到test.html页面
 def to_test(request):
@@ -84,6 +94,8 @@ def start_compile(request):
     file = files
     branch = request.GET.get("branch")
     version = request.GET.get("version")
+    IP = None
+    ROOT_PASSWD=None
     if cpus == "x86":
         IP=Config.X86_IP
         ROOT_PASSWD=Config.X86_ROOT_PASSWD
@@ -112,7 +124,7 @@ def start_compile(request):
     setting_files = ''
     for file in files.strip().split(' '):
         setting_files+="arch/"+cpus+"/configs/"+file+" "
-    command = "cd /tmp/klinux; echo "+ROOT_PASSWD+" | sudo -S rm -rf build.log ; echo "+ROOT_PASSWD+" | sudo -S touch build.log ; echo "+ROOT_PASSWD+" | sudo -S chmod 666 build.log ; echo "+ROOT_PASSWD+" | sudo -S  ./scripts/buildpackage.sh "+setting_files[:-2]+ " >> build.log"
+    command = "cd /tmp/klinux; echo "+ROOT_PASSWD+" | sudo -S rm -rf build.log ; echo "+ROOT_PASSWD+" | sudo -S touch build.log ; echo "+ROOT_PASSWD+" | sudo -S chmod 666 build.log ; echo "+ROOT_PASSWD+" | sudo -S  nohup ./scripts/buildpackage.sh "+setting_files[:-2]+ " >> build.log &"
     #进行编译
     user_compile[username+"_"+cpus]=0; #正常编译
     client_to_server_compile(IP,command)
@@ -142,12 +154,12 @@ def start_compile(request):
     branch_version = results[-2]  #分支版本
     date = results[-1]            #时间
     #mv build.log to the same directory as kernel
-    client_to_server_compile(IP,"echo "+ROOT_PASSWD+" | sudo -S cp /tmp/klinux/build.log /var/data/ftpdata/robot/"+date)
+    client_to_server_compile(IP,"echo "+ROOT_PASSWD+" | sudo -S mv /tmp/klinux/build.log /var/data/ftpdata/robot/"+date)
     #The above data will then be stored in the database
     dao = Dao()
     uid = dao.executeQuerySql("select id from tbl_user where user_name = '%s'"% (username))[0][0];
-    dao.executeSql("insert into tbl_record (uid,file_path,file_name,kernel_version,architecture,suffix,branch_version,date) "
-                   "values ('%s','%s','%s','%s','%s','%s','%s','%s')" % (uid,file_path,file_name,kernel_version,architecture,suffix,branch_version,date))
+    dao.executeSql("insert into tbl_record (uid,file_path,file_name,kernel_version,architecture,suffix,branch_version,date,ip) "
+                   "values ('%s','%s','%s','%s','%s','%s','%s','%s','%s')" % (uid,file_path,file_name,kernel_version,architecture,suffix,branch_version,date,IP))
     user_compile[username + "_" + cpus] = 1;  # 将状态改为正常完成编译
     return JsonResponse({"cpus":cpus,"file_path":file_path,"file_name":file_name,
                          "kernel_version":kernel_version,"architecture":architecture,
@@ -183,14 +195,14 @@ def stop_compile(request):
         IP=Config.MIPS_IP
         ROOT_PASSWD=Config.MIPS_ROOT_PASSWD
         mips_compiling_message.clear()
-    list_pid = client_to_server(IP, "ps aux | grep build | awk '{print $2}'")
+    list_pid = client_to_server(IP, "ps aux | grep build | awk '$1!~/libvirt+/{print $2}'")
     command = "echo "+ROOT_PASSWD+" | sudo -S kill -9 "
     for pid in list_pid:
         command += pid + " "
     #kill the compiling process
     client_to_server(IP, command)
     #move the build.log to /var/data/ftpdata/robot/
-    command="echo "+ROOT_PASSWD+" | sudo -S cp /tmp/klinux/build.log /var/data/ftpdata/robot/"
+    command="echo "+ROOT_PASSWD+" | sudo -S mv /tmp/klinux/build.log /var/data/ftpdata/robot/"
     client_to_server(IP,command)
     return JsonResponse({"stop":1,"IP":IP})
 

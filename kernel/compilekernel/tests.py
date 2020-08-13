@@ -6,6 +6,7 @@ import json
 import subprocess
 #from kernel.compilekernel.utils import exec
 # Create your tests here
+from kernel.compilekernel.Dao import Dao
 from kernel.compilekernel.models import AfterCompile, Config
 
 def exec(command):
@@ -43,14 +44,14 @@ print(results[-2]) #分支版本
 print(results[-1]) #时间
 print(results[-6].split('/')[-1]) #package name
 '''
-
+'''
 #杀死进程
 list_pid =  client_to_server(Config.X86_IP,"ps aux | grep build | awk '{print $2}'")
 command = "echo 123123 | sudo -S kill -9 "
 for pid in list_pid:
     command+=pid+" "
 client_to_server(Config.X86_IP,command)
-
+'''
 '''
 exec("cd ~/klinux; echo "+Config.ROOT_PASSWD+" | rm -rf build.log ;echo "+Config.ROOT_PASSWD+" | sudo -S  ./scripts/buildpackage.sh  arch/x86/configs/kylin_common.config  >> build.log")
 status =  exec("echo $?")
@@ -86,3 +87,12 @@ file_path = "/var/data/ftpdata/robot/2020-08-07_08_54/release-4.4.131-20200805-g
 paths =  file_path.split("ftpdata")
 print(paths[1])
 '''
+pids =  client_to_server("172.19.140.166", "ps aux | grep build | awk '{print $2}'")
+for pid  in pids:
+    print(pid)
+
+print("===========")
+
+pids =  client_to_server("172.19.140.166", "ps aux | grep build | awk '$1!~/libvirt+/{print $2}'")
+for pid  in pids:
+    print(pid)

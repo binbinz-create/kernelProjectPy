@@ -26,8 +26,8 @@
                                    {{ request.session.user }} <span class="caret"></span>
                                   </a>
                                   <ul class="dropdown-menu">
-                                    <li><a href="#">编译记录</a></li>
-                                    <li><a href="#">编译完成的包</a></li>
+                                    <li><a href="compile_record?user={{ request.session.user }}">编译记录</a></li>
+                                    <li><a href="compile_record_all">编译完成的包</a></li>
                                     <li><a href="exit_login">退出登录</a></li>
                                   </ul>
                                </div>
@@ -373,6 +373,8 @@ $(document).ready(function(){
                     pulllog()
                 }else if(data.success==0){
                     alert("编译失败")
+                    $("#download_log").attr("href","ftp://"+data.IP+"/robot/build.log")
+                     enableBtn()
                 }
             }
         });

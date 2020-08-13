@@ -29,14 +29,14 @@
                                   </a>
                                   <ul class="dropdown-menu">
                                     <li><a href="compile_record?user={{ request.session.user }}">编译记录</a></li>
-                                    <li><a href="#">已经编译过的包</a></li>
+                                    <li><a href="compile_record_all">编译完成的包</a></li>
                                     <li><a href="exit_login">退出登录</a></li>
                                   </ul>
                                </div>
                             </li>
                            <li style="float: right !important; margin-right: 20px;">
                                 <div class="btn-group " style="margin-top: 15px;">
-                                  <a type="button" style="background-color: #ffffff;" class="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <a type="button" id="user_compiling" style="display: none; background-color: #ffffff;" class="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                    正在编译的用户 <span class="caret"></span>
                                   </a>
                                   <ul class="dropdown-menu">
