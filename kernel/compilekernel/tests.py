@@ -9,6 +9,7 @@ import subprocess
 from kernel.compilekernel.Dao import Dao
 from kernel.compilekernel.models import AfterCompile, Config
 
+
 def exec(command):
     re = os.popen(command).readlines()
     result=[]
@@ -33,6 +34,19 @@ def client_to_server(serverName,command):
     results = json.loads(receive_results.decode('utf-8'))
     clientSocket.close()
     return results
+
+#专门用来发送编译命令的client
+def client_to_server_compile(serverName,command):
+    serverPort=12001
+    clientSocket=socket(AF_INET,SOCK_DGRAM)
+    #发送命令
+    clientSocket.sendto(command.encode(),(serverName,serverPort))
+    receive_results,serverAddress=clientSocket.recvfrom(16384)
+    #将接收到的json字符串转换为list
+    results = json.loads(receive_results.decode('utf-8'))
+    clientSocket.close()
+    return results
+
 
 '''
 results = exec("cd ~/klinux ; ./tar_kernel.sh")
@@ -87,12 +101,24 @@ file_path = "/var/data/ftpdata/robot/2020-08-07_08_54/release-4.4.131-20200805-g
 paths =  file_path.split("ftpdata")
 print(paths[1])
 '''
-pids =  client_to_server("172.19.140.166", "ps aux | grep build | awk '{print $2}'")
-for pid  in pids:
+list_pid =  client_to_server(Config.X86_IP, "ps aux | grep build | awk '$1!~/libvirt+/{print $2}'")
+command = "echo jd#180188 | sudo -S kill -9 "
+for pid in list_pid:
     print(pid)
+    command+=pid+" "
+print(command)
+client_to_server(Config.X86_IP,command)
+'''
+results = client_to_server(Config.X86_IP,"wc -l /tmp/klinux/build.log")
+if len(results) > 0:
+    nu = str(results[0]).split(' ')[0]
+else:
+    nu = 0
+print(nu)
+'''
 
-print("===========")
-
-pids =  client_to_server("172.19.140.166", "ps aux | grep build | awk '$1!~/libvirt+/{print $2}'")
-for pid  in pids:
-    print(pid)
+'''
+command = "cd /tmp/klinux; echo jd#180188 | sudo -S rm -rf build.log ; echo jd#180188 | sudo -S touch build.log ; echo jd#180188 | sudo -S chmod 666 build.log ; echo jd#180188 | sudo -S  ./scripts/buildpackage.sh arch/x86/configs/kylin_common.config >> build.log"
+client_to_server_compile(Config.X86_IP,command)
+print("aaa")
+'''

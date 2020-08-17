@@ -107,6 +107,7 @@ $(document).ready(function(){
         var username = $("#user_name").attr("value");
         //实时拉取日志
         $("#log_message textarea").text("");
+
         function pulllog() {
             if(!isCompile)
                 return;
@@ -121,7 +122,7 @@ $(document).ready(function(){
                         $("#log_message textarea").append(info + "\n");
                     });
                     if(data.message!=null){   //完成了编译，则将kernel下载路径显示出来，并停止编译
-                        isCompile=false
+                       isCompile=false
                        file = data.message[2].split("ftpdata")[1]
                        $("#down_kernel").text(data.message[3]);
                        $("#down_kernel").attr("href","ftp://"+data.IP+file);

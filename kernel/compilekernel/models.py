@@ -6,7 +6,7 @@ from django.db import models
 class Config:
     ROOT_PASSWD="zhubin123"
     #X86_ROOT_PASSWD="jd#180188"
-    X86_ROOT_PASSWD="zhubin123"
+    X86_ROOT_PASSWD="jd#180188"
     ARM_ROOT_PASSWD="jd#180188"
     MIPS_ROOT_PASSWD="123123"
     GIT_ADDRESS="http://172.19.140.200/jiangdi/klinux.git"

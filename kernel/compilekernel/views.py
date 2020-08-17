@@ -124,9 +124,11 @@ def start_compile(request):
     setting_files = ''
     for file in files.strip().split(' '):
         setting_files+="arch/"+cpus+"/configs/"+file+" "
-    command = "cd /tmp/klinux; echo "+ROOT_PASSWD+" | sudo -S rm -rf build.log ; echo "+ROOT_PASSWD+" | sudo -S touch build.log ; echo "+ROOT_PASSWD+" | sudo -S chmod 666 build.log ; echo "+ROOT_PASSWD+" | sudo -S  nohup ./scripts/buildpackage.sh "+setting_files[:-2]+ " >> build.log &"
+    command = "cd /tmp/klinux; echo "+ROOT_PASSWD+" | sudo -S rm -rf build.log ; echo "+ROOT_PASSWD+" | sudo -S touch build.log ; echo "+ROOT_PASSWD+" | sudo -S chmod 666 build.log ; echo "+ROOT_PASSWD+" | sudo -S  ./scripts/buildpackage.sh "+setting_files[:-2]+ " >> build.log "
+    print(command)
     #进行编译
     user_compile[username+"_"+cpus]=0; #正常编译
+#    time.sleep(10)
     client_to_server_compile(IP,command)
     #编译结束后,将正在编译的用户设置为空
     if cpus == "x86":
@@ -141,11 +143,12 @@ def start_compile(request):
     if int(deb_num) < 4:
        return JsonResponse({"success":0})
     #编译完成之后打包操作
-    client_to_server_compile(IP,"cd /tmp/klinux ; echo "+ROOT_PASSWD+" | sudo -S rm -rf scripts/tar_kernel.sh")
+    client_to_server(IP,"cd /tmp/klinux ; echo "+ROOT_PASSWD+" | sudo -S rm -rf scripts/tar_kernel.sh")
+    client_to_server(IP,"cd /tmp/klinux/scripts ; echo "+ROOT_PASSWD+" | sudo -S touch tar_kernel.sh; echo "+ROOT_PASSWD+" | sudo -S chmod 666 tar_kernel.sh")
     for command in AfterCompile.commands:
         client_to_server_compile(IP,"echo "+ROOT_PASSWD+" | sudo -S echo \""+command+"\" >> /tmp/klinux/scripts/tar_kernel.sh")
     #run tar_kernel.sh and return such as file path , branch version , architecture, suffix , date
-    results =  client_to_server_compile(IP,"cd /tmp/klinux/scripts ; echo "+ROOT_PASSWD+" | sudo -S  chmod 777 /tmp/klinux/scripts/tar_kernel.sh ; echo "+ROOT_PASSWD+" | sudo -S ./tar_kernel.sh")
+    results =  client_to_server_compile(IP,"cd /tmp/klinux/ ; echo "+ROOT_PASSWD+" | sudo -S  chmod 777 /tmp/klinux/scripts/tar_kernel.sh ; echo "+ROOT_PASSWD+" | sudo -S ./scripts/tar_kernel.sh")
     file_path = results[-6]
     file_name = results[-6].split('/')[-1]
     kernel_version = results[-5]  #主线版本
@@ -160,7 +163,7 @@ def start_compile(request):
     uid = dao.executeQuerySql("select id from tbl_user where user_name = '%s'"% (username))[0][0];
     dao.executeSql("insert into tbl_record (uid,file_path,file_name,kernel_version,architecture,suffix,branch_version,date,ip) "
                    "values ('%s','%s','%s','%s','%s','%s','%s','%s','%s')" % (uid,file_path,file_name,kernel_version,architecture,suffix,branch_version,date,IP))
-    user_compile[username + "_" + cpus] = 1;  # 将状态改为正常完成编译
+    user_compile[username + "_" + cpus] = 1;  # 将该状态改为正常完成编译
     return JsonResponse({"cpus":cpus,"file_path":file_path,"file_name":file_name,
                          "kernel_version":kernel_version,"architecture":architecture,
                          "suffix":suffix,"branch_version":branch_version,"date":date,"IP":IP,"success":1})
@@ -219,7 +222,12 @@ def pull_log(request):
         IP = Config.ARM_IP
     elif cpus == 'mips':
         IP = Config.MIPS_IP
-    build_log_nu = str(client_to_server_log(IP,"wc -l /tmp/klinux/build.log")[0]).split(' ')[0]
+    results = client_to_server(Config.X86_IP,"wc -l /tmp/klinux/build.log")
+    build_log_nu=None
+    if len(results) > 0:
+        build_log_nu = str(results[0]).split(' ')[0]
+    else:
+        build_log_nu = 0
     #编译进程的数量
     build_process_number = client_to_server_log(IP,"ps aux | grep buildpackage | awk '{print $2}' | wc -l")
     #当前用户是否正常完成编译
