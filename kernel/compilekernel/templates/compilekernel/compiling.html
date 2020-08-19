@@ -132,13 +132,22 @@ $(document).ready(function(){
                        $("#down_kernel").show(200)
                        //hide the compiling state and who is compiling
                        $("#"+data.cpus+"_compiling").hide()
+                       $("#compiling_state_"+data.cpus).hide();
                     }
                     nu = data.nu;
+                    if(data.fail!=null && data.fail == 1){
+                        isCompile=false;
+                        alert("编译失败");
+                        $("#download_log").attr("href","ftp://"+data.IP+"/robot/build.log");
+                        $("#stop_compile_btn").hide();
+                        $("#download_file").show();
+                        $("#down_kernel").hide();
+                    }
                   //如果只有一个进程，表示编译结束。（这一个进程为 grep）  后一个条件是防止编译进程还没启动就终止日志打印了
                   //到了这里则代表正常编译结束
  /*                 if(data.build_process_number < 4 && data.build_log_nu > 100){
                     isCompile=false
-                   }  */
+                   } */
                 }
             });
             setTimeout(pulllog,1000)

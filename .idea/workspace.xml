@@ -21,10 +21,11 @@
   <component name="ChangeListManager">
     <list default="true" id="428621be-7b20-4039-b4bf-a5103229cbab" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kernel/compilekernel/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/compilekernel/mymiddleware.py" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/mymiddleware.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/compiling.html" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/compiling.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kernel/compilekernel/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/templates/compilekernel/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel/compilekernel/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/compilekernel/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/kernel/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/kernel/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -269,7 +270,7 @@
       <workItem from="1596675122347" duration="73932000" />
       <workItem from="1597137842368" duration="4922000" />
       <workItem from="1597196373254" duration="14000" />
-      <workItem from="1597196396151" duration="43409000" />
+      <workItem from="1597196396151" duration="77374000" />
     </task>
     <servers />
   </component>
@@ -309,22 +310,22 @@
       <screen x="0" y="0" width="1600" height="854" />
     </state>
     <state x="584" y="181" key="FileChooserDialogImpl/0.0.1600.854@0.0.1600.854" timestamp="1596174242165" />
-    <state width="1600" height="116" key="GridCell.Tab.0.bottom" timestamp="1597396233770">
+    <state width="1600" height="2" key="GridCell.Tab.0.bottom" timestamp="1597731261244">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state width="1600" height="116" key="GridCell.Tab.0.bottom/0.0.1600.854@0.0.1600.854" timestamp="1597396233770" />
-    <state width="1600" height="116" key="GridCell.Tab.0.center" timestamp="1597396233769">
+    <state width="1600" height="2" key="GridCell.Tab.0.bottom/0.0.1600.854@0.0.1600.854" timestamp="1597731261244" />
+    <state width="1600" height="2" key="GridCell.Tab.0.center" timestamp="1597731261242">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state width="1600" height="116" key="GridCell.Tab.0.center/0.0.1600.854@0.0.1600.854" timestamp="1597396233769" />
-    <state width="1600" height="116" key="GridCell.Tab.0.left" timestamp="1597396233768">
+    <state width="1600" height="2" key="GridCell.Tab.0.center/0.0.1600.854@0.0.1600.854" timestamp="1597731261242" />
+    <state width="1600" height="2" key="GridCell.Tab.0.left" timestamp="1597731261241">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state width="1600" height="116" key="GridCell.Tab.0.left/0.0.1600.854@0.0.1600.854" timestamp="1597396233768" />
-    <state width="1600" height="116" key="GridCell.Tab.0.right" timestamp="1597396233770">
+    <state width="1600" height="2" key="GridCell.Tab.0.left/0.0.1600.854@0.0.1600.854" timestamp="1597731261241" />
+    <state width="1600" height="2" key="GridCell.Tab.0.right" timestamp="1597731261243">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state width="1600" height="116" key="GridCell.Tab.0.right/0.0.1600.854@0.0.1600.854" timestamp="1597396233770" />
+    <state width="1600" height="2" key="GridCell.Tab.0.right/0.0.1600.854@0.0.1600.854" timestamp="1597731261243" />
     <state width="1600" height="94" key="GridCell.Tab.1.bottom" timestamp="1597396166272">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
@@ -353,10 +354,10 @@
       <screen x="0" y="0" width="1600" height="854" />
     </state>
     <state x="14" y="112" width="1037" height="742" key="SettingsEditor/0.0.1600.854@0.0.1600.854" timestamp="1596675055089" />
-    <state x="525" y="157" width="654" height="524" key="StructurePopup" timestamp="1596705369703">
+    <state x="525" y="157" width="654" height="524" key="StructurePopup" timestamp="1597729238673">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
-    <state x="525" y="157" width="654" height="524" key="StructurePopup/0.0.1600.854@0.0.1600.854" timestamp="1596705369703" />
+    <state x="525" y="157" width="654" height="524" key="StructurePopup/0.0.1600.854@0.0.1600.854" timestamp="1597729238673" />
     <state width="498" height="449" key="SwitcherDM" timestamp="1595573337998">
       <screen x="0" y="0" width="1600" height="854" />
     </state>
@@ -402,7 +403,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/kernel/compilekernel/views.py</url>
-          <line>129</line>
+          <line>128</line>
           <option name="timeStamp" value="61" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -428,7 +429,7 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/kernelProjectPy$Dao.coverage" NAME="Dao Coverage Results" MODIFIED="1597026751162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
     <SUITE FILE_PATH="coverage/kernelProjectPy$utils.coverage" NAME="utils Coverage Results" MODIFIED="1594381709274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
-    <SUITE FILE_PATH="coverage/kernelProjectPy$tests.coverage" NAME="tests Coverage Results" MODIFIED="1597388285271" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
+    <SUITE FILE_PATH="coverage/kernelProjectPy$tests.coverage" NAME="tests Coverage Results" MODIFIED="1597728642052" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
     <SUITE FILE_PATH="coverage/kernelProjectPy$test1.coverage" NAME="test1 Coverage Results" MODIFIED="1595553467945" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
     <SUITE FILE_PATH="coverage/kernelProjectPy$views.coverage" NAME="views Coverage Results" MODIFIED="1595222105061" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kernel/compilekernel" />
   </component>

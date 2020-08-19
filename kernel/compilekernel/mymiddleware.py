@@ -10,7 +10,6 @@ except ImportError:
 
 
 class SimpleMiddleware(MiddlewareMixin):
-
     def process_request(self, request):
         path = request.path;
         if request.path != '/kernel/login' and request.path != '/kernel/login_judge':

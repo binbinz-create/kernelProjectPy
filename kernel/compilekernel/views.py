@@ -125,7 +125,6 @@ def start_compile(request):
     for file in files.strip().split(' '):
         setting_files+="arch/"+cpus+"/configs/"+file+" "
     command = "cd /tmp/klinux; echo "+ROOT_PASSWD+" | sudo -S rm -rf build.log ; echo "+ROOT_PASSWD+" | sudo -S touch build.log ; echo "+ROOT_PASSWD+" | sudo -S chmod 666 build.log ; echo "+ROOT_PASSWD+" | sudo -S  ./scripts/buildpackage.sh "+setting_files[:-2]+ " >> build.log "
-    print(command)
     #进行编译
     user_compile[username+"_"+cpus]=0; #正常编译
 #    time.sleep(10)
@@ -141,7 +140,8 @@ def start_compile(request):
     deb_num = client_to_server(Config.X86_IP,"ls  /tmp | grep -E .*deb | wc -l")[0]
     #/tmp目录下没有*deb文件，则表明没有编译成功
     if int(deb_num) < 4:
-       return JsonResponse({"success":0})
+        user_compile[username + "_" + cpus] = 2;
+        return JsonResponse({"success":0})
     #编译完成之后打包操作
     client_to_server(IP,"cd /tmp/klinux ; echo "+ROOT_PASSWD+" | sudo -S rm -rf scripts/tar_kernel.sh")
     client_to_server(IP,"cd /tmp/klinux/scripts ; echo "+ROOT_PASSWD+" | sudo -S touch tar_kernel.sh; echo "+ROOT_PASSWD+" | sudo -S chmod 666 tar_kernel.sh")
@@ -223,7 +223,7 @@ def pull_log(request):
     elif cpus == 'mips':
         IP = Config.MIPS_IP
     results = client_to_server(Config.X86_IP,"wc -l /tmp/klinux/build.log")
-    build_log_nu=None
+    build_log_nu=0
     if len(results) > 0:
         build_log_nu = str(results[0]).split(' ')[0]
     else:
@@ -244,6 +244,9 @@ def pull_log(request):
         uid = dao.executeQuerySql("select id from tbl_user where user_name = '%s'" % (username))[0][0]
         message =  dao.executeQuerySql("select * from tbl_record where id = (select max(id) from tbl_record) and uid = '%s' " % (uid))[0]
         return JsonResponse({"cpus":cpus,"IP":IP,"message":message,"build_process_number": build_process_number, "nu": nu, "build_log_nu": build_log_nu})
+    #如果编译失败，则返回编译失败的信息
+    elif state==2:
+        return JsonResponse({"IP":IP,"fail":1})
     #如果不够的话，则返回进程数，查看是否编译过程已经结束
     else:
         nu = int(build_log_nu) if nu > int(build_log_nu) else nu

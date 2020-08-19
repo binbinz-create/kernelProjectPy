@@ -22,7 +22,7 @@
                             <li><a href="#">Changelog</a></li>
                             <li style="float: right !important;">
                                 <div class="btn-group " style="margin-top: 15px;">
-                                  <a type="button" style="background-color: #ffffff;" class="" id="user_name" value="{{ request.session.user }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <a type="button" style="background-color: #ffffff;" id="user_name" value="{{ request.session.user }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                    {{ request.session.user }} <span class="caret"></span>
                                   </a>
                                   <ul class="dropdown-menu">
@@ -279,7 +279,7 @@ $(document).ready(function(){
                 }
             }
         })
-        if(flag_wait)
+        if(flag_wait)      //有人正在编译，需要等待
             return false;
 
         //clear log information
@@ -341,7 +341,7 @@ $(document).ready(function(){
             setTimeout(pulllog,1000)
         }
 
-        pulllog()
+//        pulllog()
 
         $("#download_file").hide(200)
         //编译内核
