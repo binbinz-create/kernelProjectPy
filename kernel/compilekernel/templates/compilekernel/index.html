@@ -258,7 +258,7 @@ $(document).ready(function(){
     });
 
 
-    //是否还在编译
+    //是否还在编译,用来判断是否还要继续发送请求拉取日志。
     var isCompile = true
 
     //点击开始编译的按钮
@@ -327,21 +327,19 @@ $(document).ready(function(){
                 type: "GET",
                 dataType: "json",
                 success: function (data) {
-                    $.each(data.log, function (infoIndex, info) {
+                    if(data.log != null){
+                        $.each(data.log, function (infoIndex, info) {
                         obj.scrollTop = obj.scrollHeight
                         $("#log_message textarea").append(info + "\n");
-                    });
-                    nu = data.nu;
-               //如果只有一个进程，表示编译结束。（这一个进程为 grep）  后一个条件是防止编译进程还没启动就终止日志打印了
-               //   if(data.build_process_number < 4 && data.build_log_nu > 100){
-               //     isCompile=false
-               //    }
+                        });
+                        nu = data.nu;
+                    }
                 }
             });
-            setTimeout(pulllog,1000)
+            setTimeout(pulllog,4000)
         }
 
-//        pulllog()
+        pulllog()
 
         $("#download_file").hide(200)
         //编译内核
@@ -372,7 +370,10 @@ $(document).ready(function(){
                    $("#"+data.cpus+"_compiling").hide()
                     pulllog()
                 }else if(data.success==0){
-                    alert("编译失败")
+                    alert("编译失败"+cpus)
+                    isCompile=false;
+                    $("#"+cpus+"_compiling").hide();
+                    $("#compiling_state_"+cpus).hide();
                     $("#download_log").attr("href","ftp://"+data.IP+"/robot/build.log")
                      enableBtn()
                 }
@@ -398,15 +399,11 @@ $(document).ready(function(){
         $("#start_compile_btn").attr("disabled","disabled");
         $("#start_compile_btn").addClass("disabled");
 
-     //   $(".navbar-nav a").attr("disabled","disabled");
-     //   $(".navbar-nav a").addClass("disabled");
-
         $("#stop_compile_btn").show(200);
     }
 
     //点击停止编译的按钮
     $("#stop_compile_btn").click(function(){
-        $("#compiling_user").hide(200);
         var cpus = $("#cpus button").attr("value");
 
         //Hides the state and who is compiling
@@ -422,13 +419,15 @@ $(document).ready(function(){
         $.ajax({
            url:"stop_compile",
            type:"GET",
+           async:false,
            data:{"cpus":cpus},
            dataType:"json",
            success:function(data){
                $("#download_log").attr("href","ftp://"+data.IP+"/robot/build.log")
+               enableBtn()
            }
         });
-        enableBtn()
+
     });
 
     //将除停止编译以外的按钮都恢复，并且隐藏掉停止编译的按钮
@@ -453,8 +452,8 @@ $(document).ready(function(){
 
         $("#stop_compile_btn").hide(200);
         //显示日志打印
-        $("#download_file").show(200)
-        $("#down_kernel").hide()
+        $("#download_file").show(200);
+        $("#down_kernel").hide();
     }
 
 

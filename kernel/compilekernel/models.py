@@ -16,7 +16,6 @@ class Config:
     CREDENTIALS_2="https://"+GIT_USER_NAME+":"+GIT_PASSWD+"@172.19.140.200/jiangdi/klinux.git"
     ARM_IP="172.19.140.198"
     X86_IP="172.19.140.166"
-    #X86_IP="172.29.33.133"
     MIPS_IP="172.29.33.199"
 
 

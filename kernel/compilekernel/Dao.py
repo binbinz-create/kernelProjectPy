@@ -32,3 +32,6 @@ class Dao:
         finally:
             conn.close()
             cur.close()
+dao = Dao()
+results =  dao.executeQuerySql("select * from tbl_global_compile where user= 'binin' and cpus = '0'")
+print(len(results))

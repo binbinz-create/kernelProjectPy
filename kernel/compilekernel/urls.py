@@ -20,4 +20,5 @@ urlpatterns=[
     path("judge_compile",compilekernel.views.judge_compile),
     path("compile_record",compilekernel.views.to_compile_record),
     path("compile_record_all",compilekernel.views.to_compile_record_all),
+    path("judge_compiling",compilekernel.views.judge_compiling),
 ]

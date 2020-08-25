@@ -1,8 +1,10 @@
+import json
 import os
 import subprocess
-from compilekernel.models import Config
 from socket import *
-import json
+
+from compilekernel.models import Config
+
 
 #执行命令，并返回打印结果
 def exec(command):
@@ -64,5 +66,15 @@ def client_to_server_log(serverName,command):
     results = json.loads(receive_results.decode('utf-8'))
     clientSocket.close()
     return results
+
+#用于将list转换为dict
+def message_list_todict(list):
+    compiling_message={}
+    compiling_message["cpus"]=list[0];
+    compiling_message["user"]=list[1];
+    compiling_message["branch"]=list[2];
+    compiling_message["version"]=list[3];
+    compiling_message["file"]=list[4];
+    return compiling_message;
 
 
